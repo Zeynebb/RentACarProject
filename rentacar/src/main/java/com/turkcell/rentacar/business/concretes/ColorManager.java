@@ -1,13 +1,12 @@
 package com.turkcell.rentacar.business.concretes;
 
 import com.turkcell.rentacar.business.abstracts.ColorService;
-import com.turkcell.rentacar.business.dtos.ColorListDto;
+import com.turkcell.rentacar.business.dtos.listDtos.ColorListDto;
 import com.turkcell.rentacar.business.requests.createRequests.CreateColorRequest;
 import com.turkcell.rentacar.business.requests.deleteRequests.DeleteColorRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateColorRequest;
 import com.turkcell.rentacar.core.utilities.mapping.ModelMapperService;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
-import com.turkcell.rentacar.core.utilities.results.ErrorResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
 import com.turkcell.rentacar.core.utilities.results.SuccessDataResult;
 import com.turkcell.rentacar.core.utilities.results.SuccessResult;
@@ -45,11 +44,9 @@ public class ColorManager implements ColorService {
 	@Override
 	public Result add(CreateColorRequest createColorRequest) throws BusinessException {
 		Color color = this.modelMapperService.forRequest().map(createColorRequest, Color.class);
-		if (checkIfColorNameExists(color.getColorName())) {
-			this.colorDao.save(color);
-			return new SuccessResult("Renk eklendi.");
-		}
-		return new ErrorResult("Renk eklenemedi!");
+		checkIfColorNameExists(color.getColorName());
+		this.colorDao.save(color);
+		return new SuccessResult("Renk eklendi.");
 	}
 
 	@Override
@@ -62,11 +59,9 @@ public class ColorManager implements ColorService {
 	@Override
 	public Result update(UpdateColorRequest updateColorRequest) throws BusinessException {
 		Color color = this.modelMapperService.forRequest().map(updateColorRequest, Color.class);
-		if (checkIfColorNameExists(color.getColorName())) {
-			this.colorDao.save(color);
-			return new SuccessResult("Renk guncellendi.");
-		}
-		return new ErrorResult("Renk guncellenemedi!");
+		checkIfColorNameExists(color.getColorName());
+		this.colorDao.save(color);
+		return new SuccessResult("Renk guncellendi.");
 	}
 
 	@Override
@@ -76,10 +71,8 @@ public class ColorManager implements ColorService {
 		return new SuccessResult("Renk silindi.");
 	}
 
-	public boolean checkIfColorNameExists(String colorName) throws BusinessException {
-		if (!this.colorDao.existsColorByColorName(colorName)) {
-			return true;
-		} else {
+	public void checkIfColorNameExists(String colorName) throws BusinessException {
+		if (this.colorDao.existsColorByColorName(colorName)) {
 			throw new BusinessException("Bu renk zaten kayitli!");
 		}
 	}

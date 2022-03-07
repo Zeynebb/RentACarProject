@@ -1,7 +1,7 @@
 package com.turkcell.rentacar.api.controllers;
 
 import com.turkcell.rentacar.business.abstracts.ColorService;
-import com.turkcell.rentacar.business.dtos.ColorListDto;
+import com.turkcell.rentacar.business.dtos.listDtos.ColorListDto;
 import com.turkcell.rentacar.business.requests.createRequests.CreateColorRequest;
 import com.turkcell.rentacar.business.requests.deleteRequests.DeleteColorRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateColorRequest;

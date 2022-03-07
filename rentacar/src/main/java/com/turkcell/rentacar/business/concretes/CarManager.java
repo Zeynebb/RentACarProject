@@ -10,7 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentacar.business.abstracts.CarService;
-import com.turkcell.rentacar.business.dtos.CarListDto;
+import com.turkcell.rentacar.business.dtos.listDtos.CarListDto;
 import com.turkcell.rentacar.business.requests.createRequests.CreateCarRequest;
 import com.turkcell.rentacar.business.requests.deleteRequests.DeleteCarRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateBrandToCarRequest;
