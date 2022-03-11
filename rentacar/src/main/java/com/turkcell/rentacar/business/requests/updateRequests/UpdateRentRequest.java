@@ -25,9 +25,14 @@ public class UpdateRentRequest {
 	private LocalDate rentReturnDate;
 
 	@NotNull
-	private boolean rentStatus;
+	@Min(1)
+	private int carId;
 
 	@NotNull
 	@Min(1)
-	private int carId;
+	private int rentalCityId;
+
+	@NotNull
+	@Min(1)
+	private int returnCityId;
 }

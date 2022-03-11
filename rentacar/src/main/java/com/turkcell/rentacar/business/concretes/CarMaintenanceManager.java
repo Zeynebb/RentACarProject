@@ -31,10 +31,9 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 	private ModelMapperService modelMapperService;
 	private RentService rentService;
 
-	@Lazy
 	@Autowired
 	public CarMaintenanceManager(CarMaintenanceDao carMaintenanceDao, ModelMapperService modelMapperService,
-			RentService rentService) {
+			@Lazy RentService rentService) {
 		this.carMaintenanceDao = carMaintenanceDao;
 		this.modelMapperService = modelMapperService;
 		this.rentService = rentService;
@@ -106,8 +105,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 	}
 
 	private void checkIfCarIsAlreadyInMaintenanceIsSuccess(int carId) throws BusinessException {
-		var result = this.carMaintenanceDao.getByCar_CarId(carId);
-		if (!result.isEmpty()) {
+		if (this.carMaintenanceDao.existsByCar_CarId(carId)) {
 			if (!checkIfCarIsAlreadyInMaintenance(carId).isSuccess()) {
 				throw new BusinessException("Arac bakimda!");
 			}
@@ -115,7 +113,15 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 	}
 
 	private void checkIfCarIsAlreadyInRent(int carId) throws BusinessException {
-		this.rentService.checkIfCarAlreadyInRent(carId);
+		if (!checkIfCarExistInRentTable(carId)) {
+			if (!this.rentService.checkIfCarAlreadyInRent(carId).isSuccess()) {
+				throw new BusinessException("Arac kirada oldugu icin bakima gonderilemez!");
+			}
+		}
+	}
+
+	private boolean checkIfCarExistInRentTable(int carId) {
+		return this.rentService.getByCarId(carId).getData().isEmpty();
 	}
 
 	private void existByCarMaintenance(int carMaintenanceId) throws BusinessException {

@@ -7,7 +7,6 @@ import com.turkcell.rentacar.business.requests.deleteRequests.DeleteBrandRequest
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateBrandRequest;
 import com.turkcell.rentacar.core.utilities.mapping.ModelMapperService;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
-import com.turkcell.rentacar.core.utilities.results.ErrorResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
 import com.turkcell.rentacar.core.utilities.results.SuccessDataResult;
 import com.turkcell.rentacar.core.utilities.results.SuccessResult;
@@ -44,12 +43,10 @@ public class BrandManager implements BrandService {
 
 	@Override
 	public Result add(CreateBrandRequest createBrandRequest) throws BusinessException {
+		checkIfBrandNameExists(createBrandRequest.getBrandName());
 		Brand brand = this.modelMapperService.forRequest().map(createBrandRequest, Brand.class);
-		if (checkIfBrandNameExists(brand.getBrandName())) {
-			this.brandDao.save(brand);
-			return new SuccessResult("Marka eklendi.");
-		}
-		return new ErrorResult("Marka eklenemedi!");
+		this.brandDao.save(brand);
+		return new SuccessResult("Marka eklendi.");
 	}
 
 	@Override
@@ -60,28 +57,31 @@ public class BrandManager implements BrandService {
 	}
 
 	@Override
-	public Result update(UpdateBrandRequest updateBrandRequest) throws BusinessException{
+	public Result update(UpdateBrandRequest updateBrandRequest) throws BusinessException {
+		checkIfBrandExists(updateBrandRequest.getBrandId());
+		checkIfBrandNameExists(updateBrandRequest.getBrandName());
 		Brand brand = this.modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
-		if (checkIfBrandNameExists(brand.getBrandName())) {
-			this.brandDao.save(brand);
-			return new SuccessResult("Marka eklendi.");
-		}
-		return new ErrorResult("Marka eklenemedi!");
+		this.brandDao.save(brand);
+		return new SuccessResult("Marka eklendi.");
 	}
-
+	
 	@Override
-	public Result delete(DeleteBrandRequest deleteBrandRequest) {
+	public Result delete(DeleteBrandRequest deleteBrandRequest) throws BusinessException{
+		checkIfBrandExists(deleteBrandRequest.getBrandId());
 		Brand brand = this.modelMapperService.forRequest().map(deleteBrandRequest, Brand.class);
 		this.brandDao.deleteById(brand.getBrandId());
 		return new SuccessResult("Marka silindi.");
 	}
+	
+	private void checkIfBrandExists(int brandId)throws BusinessException {
+		if(!this.brandDao.existsById(brandId)) {
+			throw new BusinessException("Marka bulunamadi!");
+		}
+	}
 
-	public boolean checkIfBrandNameExists(String brandName) throws BusinessException {
-		if (!this.brandDao.existsBrandByBrandName(brandName)) {
-			return true;
-		} else {
+	private void checkIfBrandNameExists(String brandName) throws BusinessException {
+		if (this.brandDao.existsBrandByBrandName(brandName)) {
 			throw new BusinessException("Bu marka zaten kayitli!");
 		}
-
 	}
 }

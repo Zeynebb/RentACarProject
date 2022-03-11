@@ -19,6 +19,6 @@ public interface BrandService {
 
 	Result update(UpdateBrandRequest updateBrandRequest) throws BusinessException;
 
-	Result delete(DeleteBrandRequest deleteBrandRequest);
+	Result delete(DeleteBrandRequest deleteBrandRequest) throws BusinessException;
 
 }

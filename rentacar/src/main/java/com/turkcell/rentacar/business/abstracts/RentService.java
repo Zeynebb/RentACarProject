@@ -20,6 +20,8 @@ public interface RentService {
 	Result delete(DeleteRentRequest deleteRentRequest) throws BusinessException;
 
 	DataResult<List<RentListDto>> getAll();
+	
+	DataResult<List<RentListDto>> getByCarId(int carId);
 
 	DataResult<RentGetDto> getRentDetailsByRentId(int rentId);
 	

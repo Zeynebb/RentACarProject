@@ -26,7 +26,7 @@ public interface CarService {
 
 	Result update(UpdateCarRequest updateCarRequest) throws BusinessException;
 
-	Result delete(DeleteCarRequest deleteCarRequest);
+	Result delete(DeleteCarRequest deleteCarRequest) throws BusinessException;
 
 	Result updateColor(UpdateColorToCarRequest updateColorToCarRequest) throws BusinessException;
 

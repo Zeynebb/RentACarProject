@@ -18,7 +18,6 @@ import com.turkcell.rentacar.business.requests.updateRequests.UpdateCarRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateColorToCarRequest;
 import com.turkcell.rentacar.core.utilities.mapping.ModelMapperService;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
-import com.turkcell.rentacar.core.utilities.results.ErrorResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
 import com.turkcell.rentacar.core.utilities.results.SuccessDataResult;
 import com.turkcell.rentacar.core.utilities.results.SuccessResult;
@@ -34,7 +33,6 @@ public class CarManager implements CarService {
 
 	@Autowired
 	public CarManager(CarDao carDao, ModelMapperService modelMapperService) {
-		super();
 		this.carDao = carDao;
 		this.modelMapperService = modelMapperService;
 	}
@@ -56,19 +54,18 @@ public class CarManager implements CarService {
 
 	@Override
 	public Result update(UpdateCarRequest updateCarRequest) throws BusinessException {
+		checkIfCarExists(updateCarRequest.getCarId());
 		Car car = this.carDao.getById(updateCarRequest.getCarId());
-		if (checkIfCarExists(updateCarRequest.getCarId())) {
-			Car updatedCar = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
-			updatedCar.setBrand(car.getBrand());
-			updatedCar.setColor(car.getColor());
-			this.carDao.save(updatedCar);
-			return new SuccessResult("Araba guncellendi.");
-		}
-		return new ErrorResult("Araba guncellenemedi!");
+		Car updatedCar = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
+		updatedCar.setBrand(car.getBrand());
+		updatedCar.setColor(car.getColor());
+		this.carDao.save(updatedCar);
+		return new SuccessResult("Araba guncellendi.");
 	}
 
 	@Override
-	public Result delete(DeleteCarRequest deleteCarRequest) {
+	public Result delete(DeleteCarRequest deleteCarRequest) throws BusinessException {
+		checkIfCarExists(deleteCarRequest.getCarId());
 		Car car = this.modelMapperService.forRequest().map(deleteCarRequest, Car.class);
 		this.carDao.deleteById(car.getCarId());
 		return new SuccessResult("Araba silindi.");
@@ -76,22 +73,16 @@ public class CarManager implements CarService {
 
 	@Override
 	public Result updateColor(UpdateColorToCarRequest updateColorToCarRequest) throws BusinessException {
-		if (checkIfCarExists(updateColorToCarRequest.getCarId())) {
-			this.carDao.updateColorToCarByCarId(updateColorToCarRequest.getCarId(),
-					updateColorToCarRequest.getColorId());
-			return new SuccessResult("Arabanin rengi guncellendi.");
-		}
-		return new ErrorResult("Arabanin rengi guncellenemedi!");
+		checkIfCarExists(updateColorToCarRequest.getCarId());
+		this.carDao.updateColorToCarByCarId(updateColorToCarRequest.getCarId(), updateColorToCarRequest.getColorId());
+		return new SuccessResult("Arabanin rengi guncellendi.");
 	}
 
 	@Override
 	public Result updateBrand(UpdateBrandToCarRequest updateBrandToCarRequest) throws BusinessException {
-		if (checkIfCarExists(updateBrandToCarRequest.getCarId())) {
-			this.carDao.updateBrandToCarByCarId(updateBrandToCarRequest.getCarId(),
-					updateBrandToCarRequest.getBrandId());
-			return new SuccessResult("Arabanin markasi guncellendi.");
-		}
-		return new ErrorResult("Arabanin markasi guncellenemedi!");
+		checkIfCarExists(updateBrandToCarRequest.getCarId());
+		this.carDao.updateBrandToCarByCarId(updateBrandToCarRequest.getCarId(), updateBrandToCarRequest.getBrandId());
+		return new SuccessResult("Arabanin markasi guncellendi.");
 	}
 
 	@Override
@@ -127,10 +118,8 @@ public class CarManager implements CarService {
 		return new SuccessDataResult<List<CarListDto>>(response, "Arabalar sayfalanarak listelendi.");
 	}
 
-	public boolean checkIfCarExists(int carId) throws BusinessException {
-		if (this.carDao.existsByCarId(carId)) {
-			return true;
-		} else {
+	private void checkIfCarExists(int carId) throws BusinessException {
+		if (!this.carDao.existsByCarId(carId)) {
 			throw new BusinessException("Boyle bir araba bulunmamaktadir!");
 		}
 	}

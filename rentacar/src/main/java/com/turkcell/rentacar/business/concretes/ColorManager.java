@@ -43,8 +43,8 @@ public class ColorManager implements ColorService {
 
 	@Override
 	public Result add(CreateColorRequest createColorRequest) throws BusinessException {
+		checkIfColorNameExists(createColorRequest.getColorName());
 		Color color = this.modelMapperService.forRequest().map(createColorRequest, Color.class);
-		checkIfColorNameExists(color.getColorName());
 		this.colorDao.save(color);
 		return new SuccessResult("Renk eklendi.");
 	}
@@ -58,22 +58,30 @@ public class ColorManager implements ColorService {
 
 	@Override
 	public Result update(UpdateColorRequest updateColorRequest) throws BusinessException {
+		checkIfColorExists(updateColorRequest.getColorId());
+		checkIfColorNameExists(updateColorRequest.getColorName());
 		Color color = this.modelMapperService.forRequest().map(updateColorRequest, Color.class);
-		checkIfColorNameExists(color.getColorName());
 		this.colorDao.save(color);
 		return new SuccessResult("Renk guncellendi.");
 	}
 
 	@Override
-	public Result delete(DeleteColorRequest deleteColorRequest) {
+	public Result delete(DeleteColorRequest deleteColorRequest) throws BusinessException {
+		checkIfColorExists(deleteColorRequest.getColorId());
 		Color color = this.modelMapperService.forRequest().map(deleteColorRequest, Color.class);
 		this.colorDao.deleteById(color.getColorId());
 		return new SuccessResult("Renk silindi.");
 	}
 
-	public void checkIfColorNameExists(String colorName) throws BusinessException {
+	private void checkIfColorNameExists(String colorName) throws BusinessException {
 		if (this.colorDao.existsColorByColorName(colorName)) {
 			throw new BusinessException("Bu renk zaten kayitli!");
+		}
+	}
+
+	private void checkIfColorExists(int colorId) throws BusinessException {
+		if (!this.colorDao.existsById(colorId)) {
+			throw new BusinessException("Renk bulunamadi!");
 		}
 	}
 

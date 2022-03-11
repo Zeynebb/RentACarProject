@@ -50,7 +50,7 @@ public class CarsController {
 	}
 
 	@DeleteMapping("/delete")
-	public Result delete(@RequestBody DeleteCarRequest deleteCarRequest) {
+	public Result delete(@RequestBody DeleteCarRequest deleteCarRequest)  throws BusinessException{
 		return this.carService.delete(deleteCarRequest);
 	}
 

@@ -19,5 +19,5 @@ public interface ColorService {
 
 	Result update(UpdateColorRequest updateColorRequest) throws BusinessException;
 
-	Result delete(DeleteColorRequest deleteColorRequest);
+	Result delete(DeleteColorRequest deleteColorRequest) throws BusinessException;
 }

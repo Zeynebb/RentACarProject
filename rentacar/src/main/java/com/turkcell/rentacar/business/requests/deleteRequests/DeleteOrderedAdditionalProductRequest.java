@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeleteColorRequest {
-	
+public class DeleteOrderedAdditionalProductRequest {
+
 	@NotNull
 	@Min(1)
-	private int colorId;
+	private int orderedAdditionalProductId;
 
 }

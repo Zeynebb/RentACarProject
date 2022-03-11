@@ -1,6 +1,4 @@
-package com.turkcell.rentacar.business.requests.createRequests;
-
-import java.time.LocalDate;
+package com.turkcell.rentacar.business.requests.updateRequests;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -12,24 +10,22 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRentRequest {
-
-	@NotNull
-	private LocalDate rentDate;
-
-	@NotNull
-	private LocalDate rentReturnDate;
+public class UpdateOrderedAdditionalProductRequest {
 
 	@NotNull
 	@Min(1)
-	private int carId;
+	private int orderedAdditionalProductId;
 
 	@NotNull
 	@Min(1)
-	private int rentalCityId;
+	private int orderedAdditionalProductAmount;
 
 	@NotNull
 	@Min(1)
-	private int returnCityId;
+	private int rentId;
+
+	@NotNull
+	@Min(1)
+	private int additionalProductId;
 
 }

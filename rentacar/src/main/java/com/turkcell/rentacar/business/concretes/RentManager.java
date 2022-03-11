@@ -1,5 +1,6 @@
 package com.turkcell.rentacar.business.concretes;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,10 +32,9 @@ public class RentManager implements RentService {
 	private ModelMapperService modelMapperService;
 	private CarMaintenanceService carMaintenanceService;
 
-	@Lazy
 	@Autowired
 	public RentManager(RentDao rentDao, ModelMapperService modelMapperService,
-			CarMaintenanceService carMaintenanceService) {
+			@Lazy CarMaintenanceService carMaintenanceService) {
 		this.rentDao = rentDao;
 		this.modelMapperService = modelMapperService;
 		this.carMaintenanceService = carMaintenanceService;
@@ -45,6 +45,8 @@ public class RentManager implements RentService {
 		checkIfCarAlreadyInMaintenance(createRentRequest.getCarId());
 		checkIfCarAlreadyInRentIsSuccess(createRentRequest.getCarId());
 		Rent rent = this.modelMapperService.forRequest().map(createRentRequest, Rent.class);
+		checkIfReturnCityIsDifferentForRentalCity(rent);
+		checkIfRentReturnDateIsAfterNow(rent);
 		this.rentDao.save(rent);
 		return new SuccessResult("Kira bilgisi eklendi.");
 	}
@@ -52,6 +54,8 @@ public class RentManager implements RentService {
 	@Override
 	public Result update(UpdateRentRequest updateRentRequest) throws BusinessException {
 		Rent rent = this.modelMapperService.forRequest().map(updateRentRequest, Rent.class);
+		checkIfRentReturnDateIsAfterNow(rent);
+		checkIfReturnCityIsDifferentForRentalCity(rent);
 		this.rentDao.save(rent);
 		return new SuccessResult("Kira bilgisi guncellendi.");
 	}
@@ -79,10 +83,19 @@ public class RentManager implements RentService {
 	}
 
 	@Override
+	public DataResult<List<RentListDto>> getByCarId(int carId) {
+		List<Rent> result = this.rentDao.getByCar_CarId(carId);
+		List<RentListDto> response = result.stream()
+				.map(rent -> modelMapperService.forDto().map(rent, RentListDto.class)).collect(Collectors.toList());
+		return new SuccessDataResult<List<RentListDto>>(response, "Araca ait kira bilgileri listelendi.");
+	}
+
+	@Override
 	public Result checkIfCarAlreadyInRent(int carId) throws BusinessException {
-		Rent rent = this.rentDao.getByCar_CarId(carId);
-		if (!rent.isRentStatus()) {
-			return new SuccessResult("Arac kirada degil!");
+		for (Rent rent : this.rentDao.getByCar_CarId(carId)) {
+			if (!rent.isRentStatus()) {
+				return new SuccessResult("Arac kirada degil!");
+			}
 		}
 		return new ErrorResult("Arac kirada!");
 	}
@@ -96,7 +109,7 @@ public class RentManager implements RentService {
 	}
 
 	private void checkIfCarAlreadyInMaintenance(int carId) throws BusinessException {
-		if (checkIfCarExistInCarMaintenanceTable(carId) == false) {
+		if (!checkIfCarExistInCarMaintenanceTable(carId)) {
 			if (!this.carMaintenanceService.checkIfCarIsAlreadyInMaintenance(carId).isSuccess()) {
 				throw new BusinessException("Araba bakimda oldugundan kiralanamaz.");
 			}
@@ -104,10 +117,24 @@ public class RentManager implements RentService {
 	}
 
 	private boolean checkIfCarExistInCarMaintenanceTable(int id) {
-		if (this.carMaintenanceService.getByCarId(id).getData().isEmpty()) {
-			return true;
+		return this.carMaintenanceService.getByCarId(id).getData().isEmpty();
+	}
+
+	private void checkIfReturnCityIsDifferentForRentalCity(Rent rent) {
+		double additionalPrice = 750;
+		if (!rent.getRentalCity().equals(rent.getReturnCity())) {
+			rent.setAdditionalServicePrice(additionalPrice);
+		} else {
+			rent.setAdditionalServicePrice(0);
 		}
-		return false;
+	}
+
+	private void checkIfRentReturnDateIsAfterNow(Rent rent) {
+		if (rent.getRentReturnDate() != null) {
+			if (!rent.getRentReturnDate().isAfter(LocalDate.now())) {
+				rent.setRentStatus(false);
+			}
+		}
 	}
 
 }
