@@ -8,15 +8,14 @@ import com.turkcell.rentacar.business.requests.deleteRequests.DeleteAdditionalPr
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateAdditionalProductRequest;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
-import com.turkcell.rentacar.exceptions.BusinessException;
 
 public interface AdditionalProductService {
 
-	Result add(CreateAdditionalProductRequest createAdditionalProductRequest) throws BusinessException;
+	Result add(CreateAdditionalProductRequest createAdditionalProductRequest);
 
-	Result update(UpdateAdditionalProductRequest updateAdditionalProductRequest) throws BusinessException;
+	Result update(UpdateAdditionalProductRequest updateAdditionalProductRequest);
 
-	Result delete(DeleteAdditionalProductRequest deleteAdditionalProductRequest) throws BusinessException;
+	Result delete(DeleteAdditionalProductRequest deleteAdditionalProductRequest);
 
 	DataResult<List<AdditionalProductListDto>> getAll();
 

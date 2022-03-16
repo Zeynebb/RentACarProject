@@ -4,15 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentacar.business.abstracts.UserService;
-import com.turkcell.rentacar.business.requests.createRequests.CreateUserRequest;
-import com.turkcell.rentacar.business.requests.deleteRequests.DeleteUserRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateUserRequest;
 import com.turkcell.rentacar.core.utilities.mapping.ModelMapperService;
 import com.turkcell.rentacar.core.utilities.results.Result;
 import com.turkcell.rentacar.core.utilities.results.SuccessResult;
 import com.turkcell.rentacar.dataAccess.abstracts.UserDao;
 import com.turkcell.rentacar.entities.abstracts.User;
-import com.turkcell.rentacar.exceptions.BusinessException;
+import com.turkcell.rentacar.exceptions.businessExceptions.EntityAlreadyExistsException;
+import com.turkcell.rentacar.exceptions.businessExceptions.EntityNotFoundException;
 
 @Service
 public class UserManager implements UserService {
@@ -27,21 +26,11 @@ public class UserManager implements UserService {
 	}
 
 	@Override
-	public Result add(CreateUserRequest createUserRequest) throws BusinessException {
-
-		existsByEmail(createUserRequest.getEmail());
-
-		User user = this.modelMapperService.forRequest().map(createUserRequest, User.class);
-
-		this.userDao.save(user);
-
-		return new SuccessResult("User added successfully.");
-	}
-
-	@Override
-	public Result update(UpdateUserRequest updateUserRequest) throws BusinessException {
+	public Result update(UpdateUserRequest updateUserRequest) {
 
 		checkIfUserExists(updateUserRequest.getUserId());
+
+		existsByEmail(updateUserRequest.getEmail());
 
 		User user = this.modelMapperService.forRequest().map(updateUserRequest, User.class);
 
@@ -50,27 +39,15 @@ public class UserManager implements UserService {
 		return new SuccessResult("User updated successfully.");
 	}
 
-	@Override
-	public Result delete(DeleteUserRequest deleteUserRequest) throws BusinessException {
-
-		checkIfUserExists(deleteUserRequest.getUserId());
-
-		User user = this.modelMapperService.forRequest().map(deleteUserRequest, User.class);
-
-		this.userDao.delete(user);
-
-		return new SuccessResult("User deleted successfully.");
-	}
-
-	private void checkIfUserExists(int userId) throws BusinessException {
+	private void checkIfUserExists(int userId) {
 		if (!this.userDao.existsById(userId)) {
-			throw new BusinessException("User not found!");
+			throw new EntityNotFoundException("User not found!");
 		}
 	}
 
-	private void existsByEmail(String email) throws BusinessException {
+	private void existsByEmail(String email) {
 		if (this.userDao.existsByEmail(email)) {
-			throw new BusinessException("Email is already exists!");
+			throw new EntityAlreadyExistsException("Email is already exists!");
 		}
 	}
 

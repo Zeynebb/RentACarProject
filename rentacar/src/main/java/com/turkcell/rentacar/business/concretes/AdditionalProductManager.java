@@ -18,7 +18,8 @@ import com.turkcell.rentacar.core.utilities.results.SuccessDataResult;
 import com.turkcell.rentacar.core.utilities.results.SuccessResult;
 import com.turkcell.rentacar.dataAccess.abstracts.AdditionalProductDao;
 import com.turkcell.rentacar.entities.concretes.AdditionalProduct;
-import com.turkcell.rentacar.exceptions.BusinessException;
+import com.turkcell.rentacar.exceptions.businessExceptions.EntityAlreadyExistsException;
+import com.turkcell.rentacar.exceptions.businessExceptions.EntityNotFoundException;
 
 @Service
 public class AdditionalProductManager implements AdditionalProductService {
@@ -33,63 +34,64 @@ public class AdditionalProductManager implements AdditionalProductService {
 	}
 
 	@Override
-	public Result add(CreateAdditionalProductRequest createAdditionalProductRequest) throws BusinessException {
-		
+	public Result add(CreateAdditionalProductRequest createAdditionalProductRequest) {
+
 		checkIfAdditionalProducNameExists(createAdditionalProductRequest.getAdditionalProductName());
-		
+
 		AdditionalProduct additionalProduct = this.modelMapperService.forRequest().map(createAdditionalProductRequest,
 				AdditionalProduct.class);
-		
+
 		this.additionalProductDao.save(additionalProduct);
-		
+
 		return new SuccessResult("AdditionalProduct added successfully.");
 	}
 
 	@Override
-	public Result update(UpdateAdditionalProductRequest updateAdditionalProductRequest) throws BusinessException {
-		
+	public Result update(UpdateAdditionalProductRequest updateAdditionalProductRequest) {
+
 		checkIfAdditionalProductExists(updateAdditionalProductRequest.getAdditionalProductId());
-		
+
 		AdditionalProduct additionalProduct = this.modelMapperService.forRequest().map(updateAdditionalProductRequest,
 				AdditionalProduct.class);
-		
+
 		this.additionalProductDao.save(additionalProduct);
-		
+
 		return new SuccessResult("AdditionalProduct updated successfully.");
 	}
 
 	@Override
-	public Result delete(DeleteAdditionalProductRequest deleteAdditionalProductRequest) throws BusinessException {
-		
+	public Result delete(DeleteAdditionalProductRequest deleteAdditionalProductRequest) {
+
 		checkIfAdditionalProductExists(deleteAdditionalProductRequest.getAdditionalProductId());
-		
+
 		AdditionalProduct additionalProduct = this.modelMapperService.forRequest().map(deleteAdditionalProductRequest,
 				AdditionalProduct.class);
-		
+
 		this.additionalProductDao.delete(additionalProduct);
-		
+
 		return new SuccessResult("AdditionalProduct deleted successfully.");
 	}
 
 	@Override
 	public DataResult<List<AdditionalProductListDto>> getAll() {
-		
+
 		List<AdditionalProduct> result = this.additionalProductDao.findAll();
 		List<AdditionalProductListDto> response = result.stream().map(additionalProduct -> this.modelMapperService
 				.forDto().map(additionalProduct, AdditionalProductListDto.class)).collect(Collectors.toList());
-		
-		return new SuccessDataResult<List<AdditionalProductListDto>>(response, "AdditionalProducts listed successfully.");
+
+		return new SuccessDataResult<List<AdditionalProductListDto>>(response,
+				"AdditionalProducts listed successfully.");
 	}
 
-	private void checkIfAdditionalProductExists(int additionalProductId) throws BusinessException {
+	private void checkIfAdditionalProductExists(int additionalProductId) {
 		if (!this.additionalProductDao.existsByAdditionalProductId(additionalProductId)) {
-			throw new BusinessException("AdditionalProduct not found!");
+			throw new EntityNotFoundException("AdditionalProduct not found!");
 		}
 	}
 
-	private void checkIfAdditionalProducNameExists(String additionalProductName) throws BusinessException {
+	private void checkIfAdditionalProducNameExists(String additionalProductName) {
 		if (this.additionalProductDao.existsByAdditionalProductName(additionalProductName)) {
-			throw new BusinessException("AdditionalProduct already exists!");
+			throw new EntityAlreadyExistsException("AdditionalProduct already exists!");
 		}
 	}
 

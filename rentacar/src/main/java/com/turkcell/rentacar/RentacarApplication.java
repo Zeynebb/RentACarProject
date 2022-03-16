@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.turkcell.rentacar.core.utilities.results.ErrorDataResult;
-import com.turkcell.rentacar.exceptions.BusinessException;
+import com.turkcell.rentacar.exceptions.businessExceptions.BusinessException;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 

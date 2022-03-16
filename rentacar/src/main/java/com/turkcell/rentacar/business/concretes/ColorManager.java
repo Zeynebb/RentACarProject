@@ -12,7 +12,8 @@ import com.turkcell.rentacar.core.utilities.results.SuccessDataResult;
 import com.turkcell.rentacar.core.utilities.results.SuccessResult;
 import com.turkcell.rentacar.dataAccess.abstracts.ColorDao;
 import com.turkcell.rentacar.entities.concretes.Color;
-import com.turkcell.rentacar.exceptions.BusinessException;
+import com.turkcell.rentacar.exceptions.businessExceptions.EntityAlreadyExistsException;
+import com.turkcell.rentacar.exceptions.businessExceptions.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class ColorManager implements ColorService {
 	}
 
 	@Override
-	public Result add(CreateColorRequest createColorRequest) throws BusinessException {
+	public Result add(CreateColorRequest createColorRequest) {
 
 		checkIfColorNameExists(createColorRequest.getColorName());
 
@@ -65,7 +66,7 @@ public class ColorManager implements ColorService {
 	}
 
 	@Override
-	public Result update(UpdateColorRequest updateColorRequest) throws BusinessException {
+	public Result update(UpdateColorRequest updateColorRequest) {
 
 		checkIfColorExists(updateColorRequest.getColorId());
 		checkIfColorNameExists(updateColorRequest.getColorName());
@@ -78,7 +79,7 @@ public class ColorManager implements ColorService {
 	}
 
 	@Override
-	public Result delete(DeleteColorRequest deleteColorRequest) throws BusinessException {
+	public Result delete(DeleteColorRequest deleteColorRequest) {
 
 		checkIfColorExists(deleteColorRequest.getColorId());
 
@@ -89,15 +90,15 @@ public class ColorManager implements ColorService {
 		return new SuccessResult("Color deleted successfully.");
 	}
 
-	private void checkIfColorNameExists(String colorName) throws BusinessException {
+	private void checkIfColorNameExists(String colorName) {
 		if (this.colorDao.existsColorByColorName(colorName)) {
-			throw new BusinessException("Color already exists!");
+			throw new EntityAlreadyExistsException("Color already exists!");
 		}
 	}
 
-	private void checkIfColorExists(int colorId) throws BusinessException {
+	private void checkIfColorExists(int colorId) {
 		if (!this.colorDao.existsById(colorId)) {
-			throw new BusinessException("Color not found!");
+			throw new EntityNotFoundException("Color not found!");
 		}
 	}
 

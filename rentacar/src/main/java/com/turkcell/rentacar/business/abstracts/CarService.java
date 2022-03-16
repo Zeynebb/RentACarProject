@@ -6,11 +6,11 @@ import com.turkcell.rentacar.business.dtos.listDtos.CarListDto;
 import com.turkcell.rentacar.business.requests.createRequests.CreateCarRequest;
 import com.turkcell.rentacar.business.requests.deleteRequests.DeleteCarRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateBrandToCarRequest;
+import com.turkcell.rentacar.business.requests.updateRequests.UpdateCarKilometerInfoRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateCarRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateColorToCarRequest;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
-import com.turkcell.rentacar.exceptions.BusinessException;
 
 public interface CarService {
 
@@ -22,15 +22,17 @@ public interface CarService {
 
 	DataResult<List<CarListDto>> getAllSorted(boolean sort);
 
-	Result add(CreateCarRequest createCarRequest) throws BusinessException;
+	Result add(CreateCarRequest createCarRequest);
 
-	Result update(UpdateCarRequest updateCarRequest) throws BusinessException;
+	Result update(UpdateCarRequest updateCarRequest);
 
-	Result delete(DeleteCarRequest deleteCarRequest) throws BusinessException;
+	Result updateKilometerInfo(UpdateCarKilometerInfoRequest updateCarKilometerInfoRequest);
 
-	Result updateColor(UpdateColorToCarRequest updateColorToCarRequest) throws BusinessException;
+	Result delete(DeleteCarRequest deleteCarRequest);
 
-	Result updateBrand(UpdateBrandToCarRequest updateBrandToCarRequest) throws BusinessException;
+	Result updateColor(UpdateColorToCarRequest updateColorToCarRequest);
+
+	Result updateBrand(UpdateBrandToCarRequest updateBrandToCarRequest);
 
 	DataResult<List<CarListDto>> findByDailyPriceLessThanEqual(double dailyPrice);
 

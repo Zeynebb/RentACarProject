@@ -9,22 +9,21 @@ import com.turkcell.rentacar.business.requests.deleteRequests.DeleteCarMaintenan
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateCarMaintenanceRequest;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
-import com.turkcell.rentacar.exceptions.BusinessException;
 
 public interface CarMaintenanceService {
-	
+
 	DataResult<List<CarMaintenanceListDto>> getAll();
-	
+
 	DataResult<List<CarMaintenanceListDto>> getByCarId(int carId);
-	
+
 	DataResult<CarMaintenanceGetDto> getCarMaintenanceDetailsByCarMaintenanceId(int carMaintenanceId);
 
-	Result add(CreateCarMaintenanceRequest createCarMaintenanceRequest) throws BusinessException;
+	Result add(CreateCarMaintenanceRequest createCarMaintenanceRequest);
 
-	Result update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest) throws BusinessException;
+	Result update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest);
 
-	Result delete(DeleteCarMaintenanceRequest deleteCarMaintenanceRequest) throws BusinessException;
-	
-	Result checkIfCarIsAlreadyInMaintenance(int carId) throws BusinessException;
+	Result delete(DeleteCarMaintenanceRequest deleteCarMaintenanceRequest);
+
+	Result checkIfCarIsAlreadyInMaintenance(int carId);
 
 }

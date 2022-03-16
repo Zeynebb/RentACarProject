@@ -17,14 +17,16 @@ public class RentGetDto {
 
 	private boolean rentStatus;
 
+	private int carId;
+
 	private String brandName;
 
 	private double dailyPrice;
 
 	private String modelYear;
-	
+
 	private String colorName;
-	
+
 	private double additionalServicePrice;
 
 	private String rentalCity;
@@ -38,7 +40,5 @@ public class RentGetDto {
 	private int additionalProductId;
 
 	private double additionalProductUnitPrice;
-
-	
 
 }

@@ -8,15 +8,14 @@ import com.turkcell.rentacar.business.requests.deleteRequests.DeleteOrderedAddit
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateOrderedAdditionalProductRequest;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
-import com.turkcell.rentacar.exceptions.BusinessException;
 
 public interface OrderedAdditionalProductService {
 
-	Result add(CreateOrderedAdditionalProductRequest createOrderedAdditionalProductRequest) throws BusinessException;
+	Result add(CreateOrderedAdditionalProductRequest createOrderedAdditionalProductRequest);
 
-	Result update(UpdateOrderedAdditionalProductRequest updateOrderedAdditionalProductRequest) throws BusinessException;
+	Result update(UpdateOrderedAdditionalProductRequest updateOrderedAdditionalProductRequest);
 
-	Result delete(DeleteOrderedAdditionalProductRequest deleteOrderedAdditionalProductRequest) throws BusinessException;
+	Result delete(DeleteOrderedAdditionalProductRequest deleteOrderedAdditionalProductRequest);
 
 	Result checkIfRentExists(int rentId);
 
@@ -24,6 +23,6 @@ public interface OrderedAdditionalProductService {
 
 	DataResult<List<OrderedAdditionalProductListDto>> getByRentId(int rentId);
 
-	DataResult<Double> calculateOrderedAdditionalPrice(int rentId) throws BusinessException;
+	DataResult<Double> calculateOrderedAdditionalPrice(int rentId);
 
 }

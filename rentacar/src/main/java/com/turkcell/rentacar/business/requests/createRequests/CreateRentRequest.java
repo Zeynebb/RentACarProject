@@ -19,6 +19,9 @@ public class CreateRentRequest {
 
 	@NotNull
 	private LocalDate rentReturnDate;
+	
+	@NotNull
+	private String startedKilometerInfo;
 
 	@NotNull
 	@Min(1)

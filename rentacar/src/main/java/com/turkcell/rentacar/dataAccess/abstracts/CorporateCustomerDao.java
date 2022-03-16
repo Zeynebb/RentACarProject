@@ -8,4 +8,6 @@ public interface CorporateCustomerDao extends JpaRepository<CorporateCustomer, I
 
 	boolean existsByUserId(int userId);
 
+	boolean existsByEmail(String email);
+
 }

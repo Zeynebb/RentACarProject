@@ -20,7 +20,6 @@ import com.turkcell.rentacar.business.requests.createRequests.CreateInvoiceReque
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
 import com.turkcell.rentacar.entities.concretes.OrderedAdditionalProduct;
-import com.turkcell.rentacar.exceptions.BusinessException;
 
 @RestController
 @RequestMapping("/api/invoices")
@@ -34,7 +33,7 @@ public class InvoicesController {
 	}
 
 	@PostMapping("/add")
-	public Result add(@RequestBody @Valid CreateInvoiceRequest createInvoiceRequest) throws BusinessException {
+	public Result add(@RequestBody @Valid CreateInvoiceRequest createInvoiceRequest) {
 		return this.invoicesService.add(createInvoiceRequest);
 	}
 
@@ -44,7 +43,7 @@ public class InvoicesController {
 	}
 
 	@GetMapping("/getByRentId")
-	public DataResult<InvioceListDto> getByRentId(@RequestParam int rentId) throws BusinessException {
+	public DataResult<InvioceListDto> getByRentId(@RequestParam int rentId) {
 		return this.invoicesService.getByRentId(rentId);
 	}
 
@@ -54,7 +53,7 @@ public class InvoicesController {
 	}
 
 	@GetMapping("/getByUserId")
-	public DataResult<List<InvioceListDto>> getByUserId(@RequestParam int userId) throws BusinessException {
+	public DataResult<List<InvioceListDto>> getByUserId(@RequestParam int userId) {
 		return this.invoicesService.getByUserId(userId);
 	}
 

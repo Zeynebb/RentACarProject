@@ -12,7 +12,8 @@ import com.turkcell.rentacar.core.utilities.results.SuccessDataResult;
 import com.turkcell.rentacar.core.utilities.results.SuccessResult;
 import com.turkcell.rentacar.dataAccess.abstracts.BrandDao;
 import com.turkcell.rentacar.entities.concretes.Brand;
-import com.turkcell.rentacar.exceptions.BusinessException;
+import com.turkcell.rentacar.exceptions.businessExceptions.EntityAlreadyExistsException;
+import com.turkcell.rentacar.exceptions.businessExceptions.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class BrandManager implements BrandService {
 	}
 
 	@Override
-	public Result add(CreateBrandRequest createBrandRequest) throws BusinessException {
+	public Result add(CreateBrandRequest createBrandRequest) {
 
 		checkIfBrandNameExists(createBrandRequest.getBrandName());
 
@@ -65,7 +66,7 @@ public class BrandManager implements BrandService {
 	}
 
 	@Override
-	public Result update(UpdateBrandRequest updateBrandRequest) throws BusinessException {
+	public Result update(UpdateBrandRequest updateBrandRequest) {
 
 		checkIfBrandExists(updateBrandRequest.getBrandId());
 		checkIfBrandNameExists(updateBrandRequest.getBrandName());
@@ -78,7 +79,7 @@ public class BrandManager implements BrandService {
 	}
 
 	@Override
-	public Result delete(DeleteBrandRequest deleteBrandRequest) throws BusinessException {
+	public Result delete(DeleteBrandRequest deleteBrandRequest) {
 
 		checkIfBrandExists(deleteBrandRequest.getBrandId());
 
@@ -89,15 +90,15 @@ public class BrandManager implements BrandService {
 		return new SuccessResult("Brand deleted successfully.");
 	}
 
-	private void checkIfBrandExists(int brandId) throws BusinessException {
+	private void checkIfBrandExists(int brandId) {
 		if (!this.brandDao.existsById(brandId)) {
-			throw new BusinessException("Brand not found!");
+			throw new EntityNotFoundException("Brand not found!");
 		}
 	}
 
-	private void checkIfBrandNameExists(String brandName) throws BusinessException {
+	private void checkIfBrandNameExists(String brandName) {
 		if (this.brandDao.existsBrandByBrandName(brandName)) {
-			throw new BusinessException("Brand already exists.");
+			throw new EntityAlreadyExistsException("Brand already exists.");
 		}
 	}
 }

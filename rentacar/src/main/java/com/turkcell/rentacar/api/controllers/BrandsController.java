@@ -7,11 +7,12 @@ import com.turkcell.rentacar.business.requests.deleteRequests.DeleteBrandRequest
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateBrandRequest;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
-import com.turkcell.rentacar.exceptions.BusinessException;
 
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/brands")
@@ -29,7 +30,7 @@ public class BrandsController {
 	}
 
 	@PostMapping("/add")
-	public Result save(@RequestBody CreateBrandRequest createBrandRequest) throws BusinessException {
+	public Result save(@RequestBody @Valid CreateBrandRequest createBrandRequest) {
 		return this.brandService.add(createBrandRequest);
 	}
 
@@ -39,12 +40,12 @@ public class BrandsController {
 	}
 
 	@PostMapping("/update")
-	public Result update(@RequestBody UpdateBrandRequest updateBrandRequest) throws BusinessException {
+	public Result update(@RequestBody @Valid UpdateBrandRequest updateBrandRequest) {
 		return this.brandService.update(updateBrandRequest);
 	}
 
 	@DeleteMapping("/delete")
-	public Result delete(@RequestBody DeleteBrandRequest deleteBrandRequest) throws BusinessException {
+	public Result delete(@RequestBody @Valid DeleteBrandRequest deleteBrandRequest) {
 		return this.brandService.delete(deleteBrandRequest);
 	}
 }

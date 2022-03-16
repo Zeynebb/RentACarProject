@@ -11,17 +11,21 @@ import com.turkcell.rentacar.entities.concretes.Car;
 
 @Repository
 public interface CarDao extends JpaRepository<Car, Integer> {
-	
+
 	boolean existsByCarId(int carId);
-	
+
 	List<Car> findByDailyPriceLessThanEqual(double dailyPrice);
-	
+
 	@Modifying
 	@Query("update Car set color.colorId=?2 where carId=?1")
 	int updateColorToCarByCarId(int carId, int colorId);
-	
+
 	@Modifying
 	@Query("update Car set brand.brandId=?2 where carId=?1")
 	int updateBrandToCarByCarId(int carId, int brandId);
+
+	@Modifying
+	@Query("update Car c set c.kilometerInfo =?2 where c.carId = ?1")
+	int updateKilometerToCarByCarId(int carId, String kilometerInfo);
 
 }

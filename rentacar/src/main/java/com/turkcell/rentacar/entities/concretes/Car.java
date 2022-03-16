@@ -28,7 +28,7 @@ public class Car {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "car_id")
 	private int carId;
-	
+
 	@Column(name = "daily_price")
 	private double dailyPrice;
 
@@ -37,6 +37,9 @@ public class Car {
 
 	@Column(name = "description")
 	private String description;
+
+	@Column(name = "kilometer_info")
+	private String kilometerInfo;
 
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "brand_id")
@@ -48,9 +51,11 @@ public class Car {
 
 	@OneToMany(mappedBy = "car")
 	private List<CarMaintenance> carMaintenences;
-	
+
 	@OneToMany(mappedBy = "car")
 	private List<Rent> rent;
 	
+	@OneToMany(mappedBy = "car")
+	private List<CarDamage> carDamages;
 
 }

@@ -10,23 +10,22 @@ import com.turkcell.rentacar.business.requests.updateRequests.UpdateInvoiceReque
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
 import com.turkcell.rentacar.entities.concretes.OrderedAdditionalProduct;
-import com.turkcell.rentacar.exceptions.BusinessException;
 
 public interface InvoiceService {
 
-	Result add(CreateInvoiceRequest createInvoiceRequest)throws BusinessException;
+	Result add(CreateInvoiceRequest createInvoiceRequest);
 
-	Result Update(UpdateInvoiceRequest updateInvoiceRequest) throws BusinessException;
+	Result Update(UpdateInvoiceRequest updateInvoiceRequest);
 
-	Result Delete(DeleteInvoiceRequest deleteInvoiceRequest) throws BusinessException;
+	Result Delete(DeleteInvoiceRequest deleteInvoiceRequest);
 
-	DataResult<InvioceListDto> getByRentId(int rentId)throws BusinessException;
+	DataResult<InvioceListDto> getByRentId(int rentId);
 
 	DataResult<List<OrderedAdditionalProduct>> getOrderedAdditionalProductByRentId(int rentId);
 
 	DataResult<List<InvioceListDto>> getAll();
 
-	DataResult<List<InvioceListDto>> getByUserId(int userId)throws BusinessException;
+	DataResult<List<InvioceListDto>> getByUserId(int userId);
 
 	DataResult<List<InvioceListDto>> getAllByBetweenStartDateAndEndDate(LocalDate startDate, LocalDate endDate);
 

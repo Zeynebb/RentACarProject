@@ -3,6 +3,7 @@ package com.turkcell.rentacar.api.controllers;
 import java.util.List;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +18,11 @@ import com.turkcell.rentacar.business.dtos.listDtos.CarListDto;
 import com.turkcell.rentacar.business.requests.createRequests.CreateCarRequest;
 import com.turkcell.rentacar.business.requests.deleteRequests.DeleteCarRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateBrandToCarRequest;
+import com.turkcell.rentacar.business.requests.updateRequests.UpdateCarKilometerInfoRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateCarRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateColorToCarRequest;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
-import com.turkcell.rentacar.exceptions.BusinessException;
 
 @RestController
 @RequestMapping("/api/cars")
@@ -30,7 +31,6 @@ public class CarsController {
 	private CarService carService;
 
 	public CarsController(CarService carService) {
-		super();
 		this.carService = carService;
 	}
 
@@ -45,29 +45,35 @@ public class CarsController {
 	}
 
 	@PostMapping("/add")
-	public Result add(@RequestBody CreateCarRequest createCarRequest) throws BusinessException {
+	public Result add(@RequestBody @Valid CreateCarRequest createCarRequest) {
 		return this.carService.add(createCarRequest);
 	}
 
 	@DeleteMapping("/delete")
-	public Result delete(@RequestBody DeleteCarRequest deleteCarRequest)  throws BusinessException{
+	public Result delete(@RequestBody @Valid DeleteCarRequest deleteCarRequest) {
 		return this.carService.delete(deleteCarRequest);
 	}
 
 	@PostMapping("/update")
-	public Result update(@RequestBody UpdateCarRequest updateCarRequest) throws BusinessException {
+	public Result update(@RequestBody @Valid UpdateCarRequest updateCarRequest) {
 		return this.carService.update(updateCarRequest);
 	}
 
 	@Transactional
-	@PostMapping("updateColor")
-	public Result updateColor(@RequestBody UpdateColorToCarRequest updateColorToCarRequest) throws BusinessException {
+	@PostMapping("/updateKilometerInfo")
+	public Result updateKilometerInfo(@RequestBody @Valid UpdateCarKilometerInfoRequest updateCarKilometerInfoRequest) {
+		return this.carService.updateKilometerInfo(updateCarKilometerInfoRequest);
+	}
+
+	@Transactional
+	@PostMapping("/updateColor")
+	public Result updateColor(@RequestBody @Valid UpdateColorToCarRequest updateColorToCarRequest) {
 		return this.carService.updateColor(updateColorToCarRequest);
 	}
 
 	@Transactional
-	@PostMapping("updateBrand")
-	public Result updateBrand(@RequestBody UpdateBrandToCarRequest updateBrandToCarRequest) throws BusinessException {
+	@PostMapping("/updateBrand")
+	public Result updateBrand(@RequestBody @Valid UpdateBrandToCarRequest updateBrandToCarRequest) {
 		return this.carService.updateBrand(updateBrandToCarRequest);
 	}
 

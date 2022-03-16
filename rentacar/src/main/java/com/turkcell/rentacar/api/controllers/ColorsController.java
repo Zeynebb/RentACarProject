@@ -7,11 +7,12 @@ import com.turkcell.rentacar.business.requests.deleteRequests.DeleteColorRequest
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateColorRequest;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
-import com.turkcell.rentacar.exceptions.BusinessException;
 
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/colors")
@@ -29,7 +30,7 @@ public class ColorsController {
 	}
 
 	@PostMapping("/add")
-	public void save(@RequestBody CreateColorRequest createColorRequest)  throws BusinessException {
+	public void save(@RequestBody @Valid CreateColorRequest createColorRequest) {
 		this.colorService.add(createColorRequest);
 	}
 
@@ -39,12 +40,12 @@ public class ColorsController {
 	}
 
 	@PostMapping("/update")
-	public Result update(@RequestBody UpdateColorRequest updateColorRequest) throws BusinessException{
+	public Result update(@RequestBody @Valid UpdateColorRequest updateColorRequest) {
 		return this.colorService.update(updateColorRequest);
 	}
 
 	@DeleteMapping("/delete")
-	public Result delete(@RequestBody DeleteColorRequest deleteColorRequest)  throws BusinessException{
+	public Result delete(@RequestBody @Valid DeleteColorRequest deleteColorRequest) {
 		return this.colorService.delete(deleteColorRequest);
 	}
 }

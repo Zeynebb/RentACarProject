@@ -40,6 +40,12 @@ public class Rent {
 	@Column(name = "rent_status")
 	private boolean rentStatus = true;
 
+	@Column(name = "started_kilometer_info")
+	private String startedKilometerInfo;
+
+	@Column(name = "ended_kilometer_info")
+	private String endedKilometerInfo;
+
 	@ManyToOne
 	@JoinColumn(name = "car_id")
 	private Car car;

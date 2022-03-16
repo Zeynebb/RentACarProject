@@ -15,6 +15,7 @@ import com.turkcell.rentacar.business.dtos.getDtos.RentGetDto;
 import com.turkcell.rentacar.business.dtos.listDtos.RentListDto;
 import com.turkcell.rentacar.business.requests.createRequests.CreateRentRequest;
 import com.turkcell.rentacar.business.requests.deleteRequests.DeleteRentRequest;
+import com.turkcell.rentacar.business.requests.updateRequests.UpdateEndedKilometerInfoRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateRentRequest;
 import com.turkcell.rentacar.core.utilities.mapping.ModelMapperService;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
@@ -25,7 +26,8 @@ import com.turkcell.rentacar.core.utilities.results.SuccessResult;
 import com.turkcell.rentacar.dataAccess.abstracts.RentDao;
 import com.turkcell.rentacar.entities.concretes.OrderedAdditionalProduct;
 import com.turkcell.rentacar.entities.concretes.Rent;
-import com.turkcell.rentacar.exceptions.BusinessException;
+import com.turkcell.rentacar.exceptions.businessExceptions.CarIsAlreadyInMaintenanceException;
+import com.turkcell.rentacar.exceptions.businessExceptions.CarIsAlreadyInRentException;
 
 @Service
 public class RentManager implements RentService {
@@ -40,12 +42,11 @@ public class RentManager implements RentService {
 		this.rentDao = rentDao;
 		this.modelMapperService = modelMapperService;
 		this.carMaintenanceService = carMaintenanceService;
-
 	}
 
 	@Override
-	public Result addCorporateCustomer(CreateRentRequest createRentRequest) throws BusinessException {
-		
+	public Result addCorporateCustomer(CreateRentRequest createRentRequest) {
+
 		checkIfCarAlreadyInMaintenance(createRentRequest.getCarId());
 		checkIfCarAlreadyInRentIsSuccess(createRentRequest.getCarId());
 
@@ -59,8 +60,8 @@ public class RentManager implements RentService {
 	}
 
 	@Override
-	public Result addIndividualCustomer(CreateRentRequest createRentRequest) throws BusinessException {
-		
+	public Result addIndividualCustomer(CreateRentRequest createRentRequest) {
+
 		checkIfCarAlreadyInMaintenance(createRentRequest.getCarId());
 		checkIfCarAlreadyInRentIsSuccess(createRentRequest.getCarId());
 
@@ -74,18 +75,19 @@ public class RentManager implements RentService {
 	}
 
 	@Override
-	public Result update(UpdateRentRequest updateRentRequest) throws BusinessException {
+	public Result update(UpdateRentRequest updateRentRequest) {
 
 		Rent rent = this.modelMapperService.forRequest().map(updateRentRequest, Rent.class);
 
 		checkIfRentReturnDateIsAfterNow(rent);
 
 		this.rentDao.save(rent);
+
 		return new SuccessResult("Rent updated successfully.");
 	}
 
 	@Override
-	public Result delete(DeleteRentRequest deleteRentRequest) throws BusinessException {
+	public Result delete(DeleteRentRequest deleteRentRequest) {
 
 		Rent rent = this.modelMapperService.forRequest().map(deleteRentRequest, Rent.class);
 
@@ -124,7 +126,7 @@ public class RentManager implements RentService {
 	}
 
 	@Override
-	public Result checkIfCarAlreadyInRent(int carId) throws BusinessException {
+	public Result checkIfCarAlreadyInRent(int carId) {
 		for (Rent rent : this.rentDao.getByCar_CarId(carId)) {
 			if (!rent.isRentStatus()) {
 				return new SuccessResult("Car not in Rent!");
@@ -138,7 +140,8 @@ public class RentManager implements RentService {
 
 		List<OrderedAdditionalProduct> result = this.rentDao.getOrderedAdditionalProductsByRentId(rentId);
 
-		return new SuccessDataResult<List<OrderedAdditionalProduct>>(result, "OrderedAdditionalProducts for Rent listed successfully.");
+		return new SuccessDataResult<List<OrderedAdditionalProduct>>(result,
+				"OrderedAdditionalProducts for Rent listed successfully.");
 	}
 
 	@Override
@@ -165,18 +168,27 @@ public class RentManager implements RentService {
 		return new ErrorResult("Cities are same!");
 	}
 
-	private void checkIfCarAlreadyInRentIsSuccess(int carId) throws BusinessException {
+	@Override
+	public Result updateEndedKilometer(UpdateEndedKilometerInfoRequest updateEndedKilometerInfoRequest) {
+
+		this.rentDao.updateEndedKilometerInfoToRentByRentId(updateEndedKilometerInfoRequest.getRentId(),
+				updateEndedKilometerInfoRequest.getEndedKilometerInfo());
+
+		return new SuccessResult("EndedKilometerInfo updated successfully.");
+	}
+
+	private void checkIfCarAlreadyInRentIsSuccess(int carId) {
 		if (this.rentDao.existsByCar_CarId(carId)) {
 			if (!checkIfCarAlreadyInRent(carId).isSuccess()) {
-				throw new BusinessException("Car in Rent!");
+				throw new CarIsAlreadyInRentException("Car in Rent!");
 			}
 		}
 	}
 
-	private void checkIfCarAlreadyInMaintenance(int carId) throws BusinessException {
+	private void checkIfCarAlreadyInMaintenance(int carId) {
 		if (!checkIfCarExistInCarMaintenanceTable(carId)) {
 			if (!this.carMaintenanceService.checkIfCarIsAlreadyInMaintenance(carId).isSuccess()) {
-				throw new BusinessException("The Car cannot be rented as it is in maintenance.");
+				throw new CarIsAlreadyInMaintenanceException("The Car cannot be rented as it is in maintenance.");
 			}
 		}
 	}

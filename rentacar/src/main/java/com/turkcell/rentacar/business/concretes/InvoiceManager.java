@@ -23,7 +23,7 @@ import com.turkcell.rentacar.core.utilities.results.SuccessResult;
 import com.turkcell.rentacar.dataAccess.abstracts.InvoiceDao;
 import com.turkcell.rentacar.entities.concretes.Invoice;
 import com.turkcell.rentacar.entities.concretes.OrderedAdditionalProduct;
-import com.turkcell.rentacar.exceptions.BusinessException;
+import com.turkcell.rentacar.exceptions.businessExceptions.EntityNotFoundException;
 
 @Service
 public class InvoiceManager implements InvoiceService {
@@ -43,7 +43,7 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	@Override
-	public Result add(CreateInvoiceRequest createInvoiceRequest) throws BusinessException {
+	public Result add(CreateInvoiceRequest createInvoiceRequest) {
 
 		Invoice invoice = this.modelMapperService.forRequest().map(createInvoiceRequest, Invoice.class);
 
@@ -56,7 +56,7 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	@Override
-	public Result Update(UpdateInvoiceRequest updateInvoiceRequest) throws BusinessException {
+	public Result Update(UpdateInvoiceRequest updateInvoiceRequest) {
 
 		checkIfInvoiceExists(updateInvoiceRequest.getInvoiceId());
 
@@ -70,7 +70,7 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	@Override
-	public Result Delete(DeleteInvoiceRequest deleteInvoiceRequest) throws BusinessException {
+	public Result Delete(DeleteInvoiceRequest deleteInvoiceRequest) {
 
 		Invoice invoice = this.modelMapperService.forRequest().map(deleteInvoiceRequest, Invoice.class);
 
@@ -91,7 +91,7 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	@Override
-	public DataResult<InvioceListDto> getByRentId(int rentId) throws BusinessException {
+	public DataResult<InvioceListDto> getByRentId(int rentId) {
 
 		checkIfRentExists(rentId);
 
@@ -110,7 +110,7 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	@Override
-	public DataResult<List<InvioceListDto>> getByUserId(int userId) throws BusinessException {
+	public DataResult<List<InvioceListDto>> getByUserId(int userId) {
 
 		checkIfUserExists(userId);
 
@@ -134,7 +134,7 @@ public class InvoiceManager implements InvoiceService {
 				"Invoices between start date and end date listed successfully.");
 	}
 
-	private double calculateTotalPrice(Invoice invoice) throws BusinessException {
+	private double calculateTotalPrice(Invoice invoice) {
 
 		return calculateRentTotalPrice(invoice.getRent().getRentId())
 				+ calculateOrderedAdditionalPrice(invoice.getRent().getRentId())
@@ -145,7 +145,7 @@ public class InvoiceManager implements InvoiceService {
 		return this.rentService.calculateRentTotalPrice(rentId).getData();
 	}
 
-	private double calculateOrderedAdditionalPrice(int rentId) throws BusinessException {
+	private double calculateOrderedAdditionalPrice(int rentId) {
 		if (checkIfInvoiceHasOrderedAdditionalProduct(rentId)) {
 			return this.orderedAdditionalProductService.calculateOrderedAdditionalPrice(rentId).getData();
 		}
@@ -159,9 +159,9 @@ public class InvoiceManager implements InvoiceService {
 		return 0;
 	}
 
-	private void checkIfInvoiceExists(int invoiceId) throws BusinessException {
+	private void checkIfInvoiceExists(int invoiceId) {
 		if (!this.invoiceDao.existsById(invoiceId)) {
-			throw new BusinessException("Invoice not found!");
+			throw new EntityNotFoundException("Invoice not found!");
 		}
 	}
 
@@ -172,15 +172,15 @@ public class InvoiceManager implements InvoiceService {
 		return false;
 	}
 
-	private void checkIfRentExists(int rentId) throws BusinessException {
+	private void checkIfRentExists(int rentId) {
 		if (!this.invoiceDao.existsByRent_RentId(rentId)) {
-			throw new BusinessException("Rent not found!");
+			throw new EntityNotFoundException("Rent not found!");
 		}
 	}
 
-	private void checkIfUserExists(int userId) throws BusinessException {
+	private void checkIfUserExists(int userId) {
 		if (!this.invoiceDao.existsByUser_UserId(userId)) {
-			throw new BusinessException("User not found!");
+			throw new EntityNotFoundException("User not found!");
 		}
 	}
 

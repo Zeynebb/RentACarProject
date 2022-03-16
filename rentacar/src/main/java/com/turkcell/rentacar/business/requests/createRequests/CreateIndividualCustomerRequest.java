@@ -1,5 +1,6 @@
 package com.turkcell.rentacar.business.requests.createRequests;
 
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;

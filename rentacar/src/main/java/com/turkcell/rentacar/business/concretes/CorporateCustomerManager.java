@@ -12,7 +12,8 @@ import com.turkcell.rentacar.core.utilities.results.Result;
 import com.turkcell.rentacar.core.utilities.results.SuccessResult;
 import com.turkcell.rentacar.dataAccess.abstracts.CorporateCustomerDao;
 import com.turkcell.rentacar.entities.concretes.CorporateCustomer;
-import com.turkcell.rentacar.exceptions.BusinessException;
+import com.turkcell.rentacar.exceptions.businessExceptions.EntityAlreadyExistsException;
+import com.turkcell.rentacar.exceptions.businessExceptions.EntityNotFoundException;
 
 @Service
 public class CorporateCustomerManager implements CorporateCustomerService {
@@ -27,7 +28,9 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	}
 
 	@Override
-	public Result add(CreateCorporateCustomerRequest createCorporateCustomerRequest) throws BusinessException {
+	public Result add(CreateCorporateCustomerRequest createCorporateCustomerRequest) {
+
+		checkIfEmailExists(createCorporateCustomerRequest.getEmail());
 
 		CorporateCustomer corporateCustomer = this.modelMapperService.forRequest().map(createCorporateCustomerRequest,
 				CorporateCustomer.class);
@@ -38,8 +41,9 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	}
 
 	@Override
-	public Result update(UpdateCorporateCustomerRequest updateCorporateCustomerRequest) throws BusinessException {
+	public Result update(UpdateCorporateCustomerRequest updateCorporateCustomerRequest) {
 
+		checkIfEmailExists(updateCorporateCustomerRequest.getEmail());
 		checkIfCorporateCustomerExists(updateCorporateCustomerRequest.getUserId());
 
 		CorporateCustomer corporateCustomer = this.modelMapperService.forRequest().map(updateCorporateCustomerRequest,
@@ -51,7 +55,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	}
 
 	@Override
-	public Result delete(DeleteCorporateCustomerRequest deleteCorporateCustomerRequest) throws BusinessException {
+	public Result delete(DeleteCorporateCustomerRequest deleteCorporateCustomerRequest) {
 
 		checkIfCorporateCustomerExists(deleteCorporateCustomerRequest.getUserId());
 
@@ -63,9 +67,15 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 		return new SuccessResult("Corporate customer deleted successfully.");
 	}
 
-	private void checkIfCorporateCustomerExists(int corporateCustomerId) throws BusinessException {
+	private void checkIfCorporateCustomerExists(int corporateCustomerId) {
 		if (!this.corporateCustomerDao.existsById(corporateCustomerId)) {
-			throw new BusinessException("Corporate Customer not found!");
+			throw new EntityNotFoundException("Corporate Customer not found!");
+		}
+	}
+
+	private void checkIfEmailExists(String email) {
+		if (this.corporateCustomerDao.existsByEmail(email)) {
+			throw new EntityAlreadyExistsException("Email already exists!");
 		}
 	}
 

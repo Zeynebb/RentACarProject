@@ -4,14 +4,13 @@ import com.turkcell.rentacar.business.requests.createRequests.CreateIndividualCu
 import com.turkcell.rentacar.business.requests.deleteRequests.DeleteIndividualCustomerRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateIndividualCustomerRequest;
 import com.turkcell.rentacar.core.utilities.results.Result;
-import com.turkcell.rentacar.exceptions.BusinessException;
 
 public interface IndividualCustomerService {
 
-	Result add(CreateIndividualCustomerRequest createIndividualCustomerRequest) throws BusinessException;
+	Result add(CreateIndividualCustomerRequest createIndividualCustomerRequest);
 
-	Result update(UpdateIndividualCustomerRequest updateIndividualCustomerRequest) throws BusinessException;
+	Result update(UpdateIndividualCustomerRequest updateIndividualCustomerRequest);
 
-	Result delete(DeleteIndividualCustomerRequest deleteIndividualCustomerRequest) throws BusinessException;
+	Result delete(DeleteIndividualCustomerRequest deleteIndividualCustomerRequest);
 
 }

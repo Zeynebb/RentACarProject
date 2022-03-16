@@ -2,6 +2,8 @@ package com.turkcell.rentacar.api.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +20,6 @@ import com.turkcell.rentacar.business.requests.deleteRequests.DeleteAdditionalPr
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateAdditionalProductRequest;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
-import com.turkcell.rentacar.exceptions.BusinessException;
 
 @RestController
 @RequestMapping("/api/additionalProducts")
@@ -32,20 +33,17 @@ public class AdditionalProductsController {
 	}
 
 	@PostMapping("/add")
-	public Result add(@RequestBody CreateAdditionalProductRequest createAdditionalProductRequest)
-			throws BusinessException {
+	public Result add(@RequestBody @Valid CreateAdditionalProductRequest createAdditionalProductRequest) {
 		return this.additionalProductService.add(createAdditionalProductRequest);
 	}
 
 	@PutMapping("/update")
-	public Result update(@RequestBody UpdateAdditionalProductRequest updateAdditionalProductRequest)
-			throws BusinessException {
+	public Result update(@RequestBody @Valid UpdateAdditionalProductRequest updateAdditionalProductRequest) {
 		return this.additionalProductService.update(updateAdditionalProductRequest);
 	}
 
 	@DeleteMapping("/delete")
-	public Result delete(@RequestBody DeleteAdditionalProductRequest deleteAdditionalProductRequest)
-			throws BusinessException {
+	public Result delete(@RequestBody @Valid DeleteAdditionalProductRequest deleteAdditionalProductRequest) {
 		return this.additionalProductService.delete(deleteAdditionalProductRequest);
 	}
 

@@ -2,6 +2,8 @@ package com.turkcell.rentacar.api.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +22,6 @@ import com.turkcell.rentacar.business.requests.deleteRequests.DeleteCarMaintenan
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateCarMaintenanceRequest;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
-import com.turkcell.rentacar.exceptions.BusinessException;
 
 @RestController
 @RequestMapping("/api/carMaintenances")
@@ -45,24 +46,22 @@ public class CarMaintenancesController {
 	}
 
 	@PostMapping("/add")
-	public Result add(@RequestBody CreateCarMaintenanceRequest createCarMaintenanceRequest) throws BusinessException {
+	public Result add(@RequestBody @Valid CreateCarMaintenanceRequest createCarMaintenanceRequest) {
 		return this.carMaintenanceService.add(createCarMaintenanceRequest);
 	}
 
 	@PutMapping("/update")
-	public Result update(@RequestBody UpdateCarMaintenanceRequest updateCarMaintenanceRequest)
-			throws BusinessException {
+	public Result update(@RequestBody @Valid UpdateCarMaintenanceRequest updateCarMaintenanceRequest) {
 		return this.carMaintenanceService.update(updateCarMaintenanceRequest);
 	}
 
 	@DeleteMapping("/delete")
-	public Result delete(@RequestBody DeleteCarMaintenanceRequest deleteCarMaintenanceRequest)
-			throws BusinessException {
+	public Result delete(@RequestBody @Valid DeleteCarMaintenanceRequest deleteCarMaintenanceRequest) {
 		return this.carMaintenanceService.delete(deleteCarMaintenanceRequest);
 	}
 
 	@GetMapping("/checkIfCarIsAlreadyInMaintenance")
-	public Result checkIfCarIsAlreadyInMaintenance(@RequestParam int carId) throws BusinessException {
+	public Result checkIfCarIsAlreadyInMaintenance(@RequestParam int carId) {
 		return this.carMaintenanceService.checkIfCarIsAlreadyInMaintenance(carId);
 	}
 

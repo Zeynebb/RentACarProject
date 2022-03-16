@@ -19,7 +19,7 @@ import com.turkcell.rentacar.core.utilities.results.SuccessDataResult;
 import com.turkcell.rentacar.core.utilities.results.SuccessResult;
 import com.turkcell.rentacar.dataAccess.abstracts.OrderedAdditionalProductDao;
 import com.turkcell.rentacar.entities.concretes.OrderedAdditionalProduct;
-import com.turkcell.rentacar.exceptions.BusinessException;
+import com.turkcell.rentacar.exceptions.businessExceptions.EntityNotFoundException;
 
 @Service
 public class OrderedAdditionalProductManager implements OrderedAdditionalProductService {
@@ -35,8 +35,7 @@ public class OrderedAdditionalProductManager implements OrderedAdditionalProduct
 	}
 
 	@Override
-	public Result add(CreateOrderedAdditionalProductRequest createOrderedAdditionalProductRequest)
-			throws BusinessException {
+	public Result add(CreateOrderedAdditionalProductRequest createOrderedAdditionalProductRequest) {
 
 		OrderedAdditionalProduct orderedAdditionalProduct = this.modelMapperService.forRequest()
 				.map(createOrderedAdditionalProductRequest, OrderedAdditionalProduct.class);
@@ -48,8 +47,7 @@ public class OrderedAdditionalProductManager implements OrderedAdditionalProduct
 	}
 
 	@Override
-	public Result update(UpdateOrderedAdditionalProductRequest updateOrderedAdditionalProductRequest)
-			throws BusinessException {
+	public Result update(UpdateOrderedAdditionalProductRequest updateOrderedAdditionalProductRequest) {
 
 		checkIfOrderedAdditionalProductExists(updateOrderedAdditionalProductRequest.getOrderedAdditionalProductId());
 
@@ -62,8 +60,7 @@ public class OrderedAdditionalProductManager implements OrderedAdditionalProduct
 	}
 
 	@Override
-	public Result delete(DeleteOrderedAdditionalProductRequest deleteOrderedAdditionalProductRequest)
-			throws BusinessException {
+	public Result delete(DeleteOrderedAdditionalProductRequest deleteOrderedAdditionalProductRequest) {
 
 		checkIfOrderedAdditionalProductExists(deleteOrderedAdditionalProductRequest.getOrderedAdditionalProductId());
 
@@ -84,7 +81,8 @@ public class OrderedAdditionalProductManager implements OrderedAdditionalProduct
 						OrderedAdditionalProductListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<OrderedAdditionalProductListDto>>(response, "OrderedAdditionalProducts listed successfully.");
+		return new SuccessDataResult<List<OrderedAdditionalProductListDto>>(response,
+				"OrderedAdditionalProducts listed successfully.");
 	}
 
 	@Override
@@ -101,8 +99,8 @@ public class OrderedAdditionalProductManager implements OrderedAdditionalProduct
 	}
 
 	@Override
-	public DataResult<Double> calculateOrderedAdditionalPrice(int rentId) throws BusinessException {
-		
+	public DataResult<Double> calculateOrderedAdditionalPrice(int rentId) {
+
 		checkIfRentExistsIsSuccess(rentId);
 
 		double orderedAdditionalProductsPrice = 0;
@@ -131,16 +129,16 @@ public class OrderedAdditionalProductManager implements OrderedAdditionalProduct
 
 		return new ErrorResult("Rent is not exists in OrderedAdditionalProduct.");
 	}
-	
-	private void checkIfRentExistsIsSuccess(int rentId) throws BusinessException {
-		if(!checkIfRentExists(rentId).isSuccess()) {
-			throw new BusinessException("Rent is not exists in OrderedAdditionalProduct.");
+
+	private void checkIfRentExistsIsSuccess(int rentId) {
+		if (!checkIfRentExists(rentId).isSuccess()) {
+			throw new EntityNotFoundException("Rent is not exists in OrderedAdditionalProduct.");
 		}
 	}
 
-	private void checkIfOrderedAdditionalProductExists(int orderedAdditionalProductId) throws BusinessException {
+	private void checkIfOrderedAdditionalProductExists(int orderedAdditionalProductId) {
 		if (!this.orderedAdditionalProductDao.existsById(orderedAdditionalProductId)) {
-			throw new BusinessException("OrderedAdditionalProduct is not found!");
+			throw new EntityNotFoundException("OrderedAdditionalProduct is not found!");
 		}
 	}
 

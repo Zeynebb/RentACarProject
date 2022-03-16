@@ -2,12 +2,16 @@ package com.turkcell.rentacar.api.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.turkcell.rentacar.business.abstracts.OrderedAdditionalProductService;
@@ -17,7 +21,6 @@ import com.turkcell.rentacar.business.requests.deleteRequests.DeleteOrderedAddit
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateOrderedAdditionalProductRequest;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
-import com.turkcell.rentacar.exceptions.BusinessException;
 
 @RestController
 @RequestMapping("/api/orderedAdditionalProducts")
@@ -31,20 +34,19 @@ public class OrderedAdditionalProductsController {
 	}
 
 	@PostMapping("/add")
-	public Result add(CreateOrderedAdditionalProductRequest createOrderedAdditionalProductRequest)
-			throws BusinessException {
+	public Result add(@RequestBody @Valid CreateOrderedAdditionalProductRequest createOrderedAdditionalProductRequest) {
 		return this.orderedAdditionalProductService.add(createOrderedAdditionalProductRequest);
 	}
 
 	@PutMapping("/update")
-	public Result update(UpdateOrderedAdditionalProductRequest updateOrderedAdditionalProductRequest)
-			throws BusinessException {
+	public Result update(
+			@RequestBody @Valid UpdateOrderedAdditionalProductRequest updateOrderedAdditionalProductRequest) {
 		return this.orderedAdditionalProductService.update(updateOrderedAdditionalProductRequest);
 	}
 
 	@DeleteMapping("/delete")
-	public Result delete(DeleteOrderedAdditionalProductRequest deleteOrderedAdditionalProductRequest)
-			throws BusinessException {
+	public Result delete(
+			@RequestBody @Valid DeleteOrderedAdditionalProductRequest deleteOrderedAdditionalProductRequest) {
 		return this.orderedAdditionalProductService.delete(deleteOrderedAdditionalProductRequest);
 	}
 
@@ -54,17 +56,17 @@ public class OrderedAdditionalProductsController {
 	}
 
 	@GetMapping("/checkIfRentExists")
-	public Result checkIfRentExists(int rentId) {
+	public Result checkIfRentExists(@RequestParam int rentId) {
 		return this.orderedAdditionalProductService.checkIfRentExists(rentId);
 	}
 
 	@GetMapping("/getByRentId")
-	public DataResult<List<OrderedAdditionalProductListDto>> getByRentId(int rentId) {
+	public DataResult<List<OrderedAdditionalProductListDto>> getByRentId(@RequestParam int rentId) {
 		return this.orderedAdditionalProductService.getByRentId(rentId);
 	}
 
 	@GetMapping("/calculateOrderedAdditionalPrice")
-	public DataResult<Double> calculateOrderedAdditionalPrice(int rentId) throws BusinessException {
+	public DataResult<Double> calculateOrderedAdditionalPrice(@RequestParam int rentId) {
 		return this.orderedAdditionalProductService.calculateOrderedAdditionalPrice(rentId);
 	}
 

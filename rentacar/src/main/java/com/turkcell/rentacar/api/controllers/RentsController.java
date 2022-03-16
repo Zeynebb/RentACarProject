@@ -2,6 +2,7 @@ package com.turkcell.rentacar.api.controllers;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,10 @@ import com.turkcell.rentacar.business.dtos.getDtos.RentGetDto;
 import com.turkcell.rentacar.business.dtos.listDtos.RentListDto;
 import com.turkcell.rentacar.business.requests.createRequests.CreateRentRequest;
 import com.turkcell.rentacar.business.requests.deleteRequests.DeleteRentRequest;
+import com.turkcell.rentacar.business.requests.updateRequests.UpdateEndedKilometerInfoRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateRentRequest;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
-import com.turkcell.rentacar.exceptions.BusinessException;
 
 @RestController
 @RequestMapping("/api/rents")
@@ -36,23 +37,30 @@ public class RentsController {
 	}
 
 	@PostMapping("/addCorporateCustomer")
-	public Result addCorporateCustomer(@RequestBody @Valid CreateRentRequest createRentRequest) throws BusinessException {
+	public Result addCorporateCustomer(@RequestBody @Valid CreateRentRequest createRentRequest) {
 		return this.rentService.addCorporateCustomer(createRentRequest);
 
 	}
 
 	@PostMapping("/addIndividualCustomer")
-	public Result addIndividualCustomer(@RequestBody @Valid CreateRentRequest createRentRequest) throws BusinessException {
+	public Result addIndividualCustomer(@RequestBody @Valid CreateRentRequest createRentRequest) {
 		return this.rentService.addIndividualCustomer(createRentRequest);
 	}
 
 	@PutMapping("/update")
-	public Result update(@RequestBody @Valid UpdateRentRequest updateRentRequest) throws BusinessException {
+	public Result update(@RequestBody @Valid UpdateRentRequest updateRentRequest) {
 		return this.rentService.update(updateRentRequest);
 	}
 
+	@Transactional
+	@PostMapping("/updateEndedKilometer")
+	public Result updateEndedKilometer(
+			@RequestBody @Valid UpdateEndedKilometerInfoRequest updateEndedKilometerInfoRequest) {
+		return this.rentService.updateEndedKilometer(updateEndedKilometerInfoRequest);
+	}
+
 	@DeleteMapping("/delete")
-	public Result delete(@RequestBody @Valid DeleteRentRequest deleteRentRequest) throws BusinessException {
+	public Result delete(@RequestBody @Valid DeleteRentRequest deleteRentRequest) {
 		return this.rentService.delete(deleteRentRequest);
 	}
 
@@ -67,7 +75,7 @@ public class RentsController {
 	}
 
 	@GetMapping("/checkIfCarAlreadyInRent")
-	public Result checkIfCarAlreadyInRent(@RequestParam int carId) throws BusinessException {
+	public Result checkIfCarAlreadyInRent(@RequestParam int carId) {
 		return this.rentService.checkIfCarAlreadyInRent(carId);
 	}
 

@@ -6,7 +6,6 @@ import com.turkcell.rentacar.business.requests.deleteRequests.DeleteColorRequest
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateColorRequest;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
-import com.turkcell.rentacar.exceptions.BusinessException;
 
 import java.util.List;
 
@@ -15,9 +14,9 @@ public interface ColorService {
 
 	DataResult<ColorListDto> getById(int id);
 
-	Result add(CreateColorRequest createColorRequest) throws BusinessException;
+	Result add(CreateColorRequest createColorRequest);
 
-	Result update(UpdateColorRequest updateColorRequest) throws BusinessException;
+	Result update(UpdateColorRequest updateColorRequest);
 
-	Result delete(DeleteColorRequest deleteColorRequest) throws BusinessException;
+	Result delete(DeleteColorRequest deleteColorRequest);
 }
