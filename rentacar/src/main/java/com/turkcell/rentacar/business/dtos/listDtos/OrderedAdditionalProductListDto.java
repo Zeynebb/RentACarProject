@@ -9,8 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderedAdditionalProductListDto {
 
-	private String brandName;
-
+	
+	private int orderedAdditionalProductAmount;
+	
+	private int additionalProductId;
 	private String additionalProductName;
+	private double additionalProductUnitPrice;
+	
+	
+	
+	
 
 }

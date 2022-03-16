@@ -34,48 +34,62 @@ public class AdditionalProductManager implements AdditionalProductService {
 
 	@Override
 	public Result add(CreateAdditionalProductRequest createAdditionalProductRequest) throws BusinessException {
+		
 		checkIfAdditionalProducNameExists(createAdditionalProductRequest.getAdditionalProductName());
+		
 		AdditionalProduct additionalProduct = this.modelMapperService.forRequest().map(createAdditionalProductRequest,
 				AdditionalProduct.class);
+		
 		this.additionalProductDao.save(additionalProduct);
-		return new SuccessResult("Ek urun eklendi.");
+		
+		return new SuccessResult("AdditionalProduct added successfully.");
 	}
 
 	@Override
 	public Result update(UpdateAdditionalProductRequest updateAdditionalProductRequest) throws BusinessException {
+		
 		checkIfAdditionalProductExists(updateAdditionalProductRequest.getAdditionalProductId());
+		
 		AdditionalProduct additionalProduct = this.modelMapperService.forRequest().map(updateAdditionalProductRequest,
 				AdditionalProduct.class);
+		
 		this.additionalProductDao.save(additionalProduct);
-		return new SuccessResult("Ek urun guncellendi.");
+		
+		return new SuccessResult("AdditionalProduct updated successfully.");
 	}
 
 	@Override
 	public Result delete(DeleteAdditionalProductRequest deleteAdditionalProductRequest) throws BusinessException {
+		
 		checkIfAdditionalProductExists(deleteAdditionalProductRequest.getAdditionalProductId());
+		
 		AdditionalProduct additionalProduct = this.modelMapperService.forRequest().map(deleteAdditionalProductRequest,
 				AdditionalProduct.class);
+		
 		this.additionalProductDao.delete(additionalProduct);
-		return new SuccessResult("Ek urun silindi.");
+		
+		return new SuccessResult("AdditionalProduct deleted successfully.");
 	}
 
 	@Override
 	public DataResult<List<AdditionalProductListDto>> getAll() {
+		
 		List<AdditionalProduct> result = this.additionalProductDao.findAll();
 		List<AdditionalProductListDto> response = result.stream().map(additionalProduct -> this.modelMapperService
 				.forDto().map(additionalProduct, AdditionalProductListDto.class)).collect(Collectors.toList());
-		return new SuccessDataResult<List<AdditionalProductListDto>>(response, "Ek urunler listelendi.");
+		
+		return new SuccessDataResult<List<AdditionalProductListDto>>(response, "AdditionalProducts listed successfully.");
 	}
 
 	private void checkIfAdditionalProductExists(int additionalProductId) throws BusinessException {
 		if (!this.additionalProductDao.existsByAdditionalProductId(additionalProductId)) {
-			throw new BusinessException("Ek urun bulunamadi!");
+			throw new BusinessException("AdditionalProduct not found!");
 		}
 	}
 
 	private void checkIfAdditionalProducNameExists(String additionalProductName) throws BusinessException {
 		if (this.additionalProductDao.existsByAdditionalProductName(additionalProductName)) {
-			throw new BusinessException("Bu ek urun zaten kayitli!");
+			throw new BusinessException("AdditionalProduct already exists!");
 		}
 	}
 

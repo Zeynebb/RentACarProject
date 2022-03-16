@@ -41,73 +41,91 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
 	@Override
 	public DataResult<List<CarMaintenanceListDto>> getAll() {
+		
 		List<CarMaintenance> result = this.carMaintenanceDao.findAll();
 		List<CarMaintenanceListDto> response = result.stream().map(
 				carMaintenance -> this.modelMapperService.forDto().map(carMaintenance, CarMaintenanceListDto.class))
 				.collect(Collectors.toList());
-		return new SuccessDataResult<List<CarMaintenanceListDto>>(response, "Bakim bilgileri listelendi.");
+		
+		return new SuccessDataResult<List<CarMaintenanceListDto>>(response, "CarMaintenances listed successfully.");
 	}
 
 	@Override
 	public DataResult<CarMaintenanceGetDto> getCarMaintenanceDetailsByCarMaintenanceId(int carMaintenanceId) {
+		
 		CarMaintenance result = this.carMaintenanceDao.getById(carMaintenanceId);
 		CarMaintenanceGetDto response = this.modelMapperService.forDto().map(result, CarMaintenanceGetDto.class);
-		return new SuccessDataResult<CarMaintenanceGetDto>(response, "Detayli bakim bilgileri listelendi.");
+		
+		return new SuccessDataResult<CarMaintenanceGetDto>(response, "CarMaintenance listed successfully.");
 	}
 
 	@Override
 	public Result add(CreateCarMaintenanceRequest createCarMaintenanceRequest) throws BusinessException {
+		
 		checkIfReturnDateIsAfterNow(createCarMaintenanceRequest.getReturnDate());
 		checkIfCarIsAlreadyInMaintenanceIsSuccess(createCarMaintenanceRequest.getCarId());
 		checkIfCarIsAlreadyInRent(createCarMaintenanceRequest.getCarId());
+		
 		CarMaintenance carMaintenance = this.modelMapperService.forRequest().map(createCarMaintenanceRequest,
 				CarMaintenance.class);
+		
 		this.carMaintenanceDao.save(carMaintenance);
-		return new SuccessResult("Bakim bilgisi eklendi.");
+		
+		return new SuccessResult("CarMaintenance added successfully.");
 	}
 
 	@Override
 	public Result update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest) throws BusinessException {
+		
 		existByCarMaintenance(updateCarMaintenanceRequest.getCarMaintenanceId());
 		checkIfReturnDateIsAfterNow(updateCarMaintenanceRequest.getReturnDate());
+		
 		CarMaintenance carMaintenance = this.modelMapperService.forRequest().map(updateCarMaintenanceRequest,
 				CarMaintenance.class);
+		
 		this.carMaintenanceDao.save(carMaintenance);
-		return new SuccessResult("Bakim bilgisi guncellendi.");
+		
+		return new SuccessResult("CarMaintenance updated successfully.");
 	}
 
 	@Override
 	public Result delete(DeleteCarMaintenanceRequest deleteCarMaintenanceRequest) throws BusinessException {
+		
 		existByCarMaintenance(deleteCarMaintenanceRequest.getCarMaintenanceId());
+		
 		CarMaintenance carMaintenance = this.modelMapperService.forRequest().map(deleteCarMaintenanceRequest,
 				CarMaintenance.class);
+		
 		this.carMaintenanceDao.delete(carMaintenance);
-		return new SuccessResult("Bakim bilgisi silindi.");
+		
+		return new SuccessResult("CarMaintenance deleted successfully.");
 	}
 
 	@Override
 	public DataResult<List<CarMaintenanceListDto>> getByCarId(int carId) {
+		
 		List<CarMaintenance> result = this.carMaintenanceDao.getByCar_CarId(carId);
 		List<CarMaintenanceListDto> response = result.stream().map(
 				carMaintenance -> this.modelMapperService.forDto().map(carMaintenance, CarMaintenanceListDto.class))
 				.collect(Collectors.toList());
-		return new SuccessDataResult<List<CarMaintenanceListDto>>(response, "Araca ait bakim bilgileri listelendi.");
+		
+		return new SuccessDataResult<List<CarMaintenanceListDto>>(response, "CarMaintenances for Car listed successfully.");
 	}
 
 	@Override
 	public Result checkIfCarIsAlreadyInMaintenance(int carId) throws BusinessException {
 		for (CarMaintenance carMaintenance : this.carMaintenanceDao.getByCar_CarId(carId)) {
 			if (carMaintenance.getReturnDate() != null) {
-				return new SuccessResult("Arac bakimda degil.");
+				return new SuccessResult("Car not in maintenance");
 			}
 		}
-		return new ErrorResult("Arac bakimda!");
+		return new ErrorResult("Car in maintenance!");
 	}
 
 	private void checkIfCarIsAlreadyInMaintenanceIsSuccess(int carId) throws BusinessException {
 		if (this.carMaintenanceDao.existsByCar_CarId(carId)) {
 			if (!checkIfCarIsAlreadyInMaintenance(carId).isSuccess()) {
-				throw new BusinessException("Arac bakimda!");
+				throw new BusinessException("Car in maintenance!");
 			}
 		}
 	}
@@ -115,7 +133,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 	private void checkIfCarIsAlreadyInRent(int carId) throws BusinessException {
 		if (!checkIfCarExistInRentTable(carId)) {
 			if (!this.rentService.checkIfCarAlreadyInRent(carId).isSuccess()) {
-				throw new BusinessException("Arac kirada oldugu icin bakima gonderilemez!");
+				throw new BusinessException("The Car cannot be sent for maintenance because it is on Rent.");
 			}
 		}
 	}
@@ -126,14 +144,14 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
 	private void existByCarMaintenance(int carMaintenanceId) throws BusinessException {
 		if (!this.carMaintenanceDao.existsById(carMaintenanceId)) {
-			throw new BusinessException("Bakim bilgisi bulunamadi.");
+			throw new BusinessException("CarMaintenance not found!");
 		}
 	}
 
 	private void checkIfReturnDateIsAfterNow(LocalDate returnDate) throws BusinessException {
 		if (returnDate != null) {
 			if (returnDate.isAfter(LocalDate.now())) {
-				throw new BusinessException("Ileri bir tarih girilemez!");
+				throw new BusinessException("A future date cannot be entered!");
 			}
 		}
 	}

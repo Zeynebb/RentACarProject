@@ -18,6 +18,12 @@ public interface OrderedAdditionalProductService {
 
 	Result delete(DeleteOrderedAdditionalProductRequest deleteOrderedAdditionalProductRequest) throws BusinessException;
 
+	Result checkIfRentExists(int rentId);
+
 	DataResult<List<OrderedAdditionalProductListDto>> getAll();
+
+	DataResult<List<OrderedAdditionalProductListDto>> getByRentId(int rentId);
+
+	DataResult<Double> calculateOrderedAdditionalPrice(int rentId) throws BusinessException;
 
 }

@@ -10,11 +10,35 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RentGetDto {
+
 	private LocalDate rentDate;
+
 	private LocalDate rentReturnDate;
+
 	private boolean rentStatus;
+
 	private String brandName;
+
+	private double dailyPrice;
+
 	private String modelYear;
+	
 	private String colorName;
+	
+	private double additionalServicePrice;
+
+	private String rentalCity;
+
+	private String returnCity;
+
+	private int orderedAdditionalProductId;
+
+	private int orderedAdditionalProductAmount;
+
+	private int additionalProductId;
+
+	private double additionalProductUnitPrice;
+
+	
 
 }

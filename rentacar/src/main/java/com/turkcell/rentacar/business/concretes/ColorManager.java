@@ -34,54 +34,70 @@ public class ColorManager implements ColorService {
 
 	@Override
 	public DataResult<List<ColorListDto>> getAll() {
+
 		List<Color> result = this.colorDao.findAll();
 		List<ColorListDto> response = result.stream()
 				.map(color -> this.modelMapperService.forDto().map(color, ColorListDto.class))
 				.collect(Collectors.toList());
-		return new SuccessDataResult<List<ColorListDto>>(response, "Renkler Listelendi.");
+
+		return new SuccessDataResult<List<ColorListDto>>(response, "Colors listed successfully.");
 	}
 
 	@Override
 	public Result add(CreateColorRequest createColorRequest) throws BusinessException {
+
 		checkIfColorNameExists(createColorRequest.getColorName());
+
 		Color color = this.modelMapperService.forRequest().map(createColorRequest, Color.class);
+
 		this.colorDao.save(color);
-		return new SuccessResult("Renk eklendi.");
+
+		return new SuccessResult("Color added successfully.");
 	}
 
 	@Override
 	public DataResult<ColorListDto> getById(int id) {
+
 		Color result = this.colorDao.getById(id);
 		ColorListDto response = this.modelMapperService.forDto().map(result, ColorListDto.class);
-		return new SuccessDataResult<ColorListDto>(response, "Renk goruntulendi.");
+
+		return new SuccessDataResult<ColorListDto>(response, "Color listed successfully.");
 	}
 
 	@Override
 	public Result update(UpdateColorRequest updateColorRequest) throws BusinessException {
+
 		checkIfColorExists(updateColorRequest.getColorId());
 		checkIfColorNameExists(updateColorRequest.getColorName());
+
 		Color color = this.modelMapperService.forRequest().map(updateColorRequest, Color.class);
+
 		this.colorDao.save(color);
-		return new SuccessResult("Renk guncellendi.");
+
+		return new SuccessResult("Color updated successfully.");
 	}
 
 	@Override
 	public Result delete(DeleteColorRequest deleteColorRequest) throws BusinessException {
+
 		checkIfColorExists(deleteColorRequest.getColorId());
+
 		Color color = this.modelMapperService.forRequest().map(deleteColorRequest, Color.class);
+
 		this.colorDao.deleteById(color.getColorId());
-		return new SuccessResult("Renk silindi.");
+
+		return new SuccessResult("Color deleted successfully.");
 	}
 
 	private void checkIfColorNameExists(String colorName) throws BusinessException {
 		if (this.colorDao.existsColorByColorName(colorName)) {
-			throw new BusinessException("Bu renk zaten kayitli!");
+			throw new BusinessException("Color already exists!");
 		}
 	}
 
 	private void checkIfColorExists(int colorId) throws BusinessException {
 		if (!this.colorDao.existsById(colorId)) {
-			throw new BusinessException("Renk bulunamadi!");
+			throw new BusinessException("Color not found!");
 		}
 	}
 

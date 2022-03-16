@@ -53,4 +53,19 @@ public class OrderedAdditionalProductsController {
 		return this.orderedAdditionalProductService.getAll();
 	}
 
+	@GetMapping("/checkIfRentExists")
+	public Result checkIfRentExists(int rentId) {
+		return this.orderedAdditionalProductService.checkIfRentExists(rentId);
+	}
+
+	@GetMapping("/getByRentId")
+	public DataResult<List<OrderedAdditionalProductListDto>> getByRentId(int rentId) {
+		return this.orderedAdditionalProductService.getByRentId(rentId);
+	}
+
+	@GetMapping("/calculateOrderedAdditionalPrice")
+	public DataResult<Double> calculateOrderedAdditionalPrice(int rentId) throws BusinessException {
+		return this.orderedAdditionalProductService.calculateOrderedAdditionalPrice(rentId);
+	}
+
 }
