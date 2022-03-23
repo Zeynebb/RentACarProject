@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentacar.business.abstracts.CarService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.listDtos.CarListDto;
 import com.turkcell.rentacar.business.requests.createRequests.CreateCarRequest;
 import com.turkcell.rentacar.business.requests.deleteRequests.DeleteCarRequest;
@@ -45,7 +46,7 @@ public class CarManager implements CarService {
 		List<CarListDto> response = result.stream()
 				.map(car -> this.modelMapperService.forDto().map(car, CarListDto.class)).collect(Collectors.toList());
 
-		return new SuccessDataResult<List<CarListDto>>(response, "Cars listed successfully.");
+		return new SuccessDataResult<List<CarListDto>>(response, BusinessMessages.CARS_LISTED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -55,7 +56,7 @@ public class CarManager implements CarService {
 
 		this.carDao.save(car);
 
-		return new SuccessResult("Car added successfully.");
+		return new SuccessResult(BusinessMessages.CAR_ADDED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -71,7 +72,7 @@ public class CarManager implements CarService {
 
 		this.carDao.save(updatedCar);
 
-		return new SuccessResult("Car updated successfully.");
+		return new SuccessResult(BusinessMessages.CAR_UPDATED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -83,7 +84,7 @@ public class CarManager implements CarService {
 
 		this.carDao.deleteById(car.getCarId());
 
-		return new SuccessResult("Car deleted successfully.");
+		return new SuccessResult(BusinessMessages.CAR_DELETED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -93,7 +94,7 @@ public class CarManager implements CarService {
 
 		this.carDao.updateColorToCarByCarId(updateColorToCarRequest.getCarId(), updateColorToCarRequest.getColorId());
 
-		return new SuccessResult("The Color of the Car updated successfully.");
+		return new SuccessResult(BusinessMessages.COLOR_CAR_UPDATED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -103,7 +104,7 @@ public class CarManager implements CarService {
 
 		this.carDao.updateBrandToCarByCarId(updateBrandToCarRequest.getCarId(), updateBrandToCarRequest.getBrandId());
 
-		return new SuccessResult("The Brand of the Car updated successfully.");
+		return new SuccessResult(BusinessMessages.BRAND_CAR_UPDATED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -112,7 +113,7 @@ public class CarManager implements CarService {
 		Car result = this.carDao.getById(id);
 		CarListDto response = this.modelMapperService.forDto().map(result, CarListDto.class);
 
-		return new SuccessDataResult<CarListDto>(response, "Car listed successfully");
+		return new SuccessDataResult<CarListDto>(response, BusinessMessages.CAR_LISTED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -122,7 +123,8 @@ public class CarManager implements CarService {
 		List<CarListDto> response = result.stream()
 				.map(car -> this.modelMapperService.forDto().map(car, CarListDto.class)).collect(Collectors.toList());
 
-		return new SuccessDataResult<List<CarListDto>>(response, "Cars successfully listed by dailyPrice.");
+		return new SuccessDataResult<List<CarListDto>>(response,
+				BusinessMessages.CAR_LISTED_SUCCESSFULLY_BY_DAILY_PRICE);
 	}
 
 	@Override
@@ -134,7 +136,8 @@ public class CarManager implements CarService {
 		List<CarListDto> response = result.stream()
 				.map(car -> this.modelMapperService.forDto().map(car, CarListDto.class)).collect(Collectors.toList());
 
-		return new SuccessDataResult<List<CarListDto>>(response, "Cars are paginated and listed successfully.");
+		return new SuccessDataResult<List<CarListDto>>(response,
+				BusinessMessages.CAR_LISTED_AND_PAGINATED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -146,7 +149,7 @@ public class CarManager implements CarService {
 		List<CarListDto> response = result.stream()
 				.map(car -> this.modelMapperService.forDto().map(car, CarListDto.class)).collect(Collectors.toList());
 
-		return new SuccessDataResult<List<CarListDto>>(response, "Cars are sorted successfully.");
+		return new SuccessDataResult<List<CarListDto>>(response, BusinessMessages.CAR_SORTED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -155,12 +158,12 @@ public class CarManager implements CarService {
 		this.carDao.updateKilometerToCarByCarId(updateCarKilometerInfoRequest.getCarId(),
 				updateCarKilometerInfoRequest.getKilometerInfo());
 
-		return new SuccessResult("The KilometerInfo of the Car updated successfully.");
+		return new SuccessResult(BusinessMessages.KILOMETER_INFO_CAR_UPDATED_SUCCESSFULLY);
 	}
 
 	private void checkIfCarExists(int carId) {
 		if (!this.carDao.existsByCarId(carId)) {
-			throw new EntityNotFoundException("Car not found!");
+			throw new EntityNotFoundException(BusinessMessages.CAR_NOT_FOUND);
 		}
 	}
 

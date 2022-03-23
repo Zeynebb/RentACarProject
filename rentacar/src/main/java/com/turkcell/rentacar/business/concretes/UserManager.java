@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentacar.business.abstracts.UserService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateUserRequest;
 import com.turkcell.rentacar.core.utilities.mapping.ModelMapperService;
 import com.turkcell.rentacar.core.utilities.results.Result;
@@ -36,18 +37,18 @@ public class UserManager implements UserService {
 
 		this.userDao.save(user);
 
-		return new SuccessResult("User updated successfully.");
+		return new SuccessResult(BusinessMessages.USER_UPDATED_SUCCESSFULLY);
 	}
 
 	private void checkIfUserExists(int userId) {
 		if (!this.userDao.existsById(userId)) {
-			throw new EntityNotFoundException("User not found!");
+			throw new EntityNotFoundException(BusinessMessages.USER_NOT_FOUND);
 		}
 	}
 
 	private void existsByEmail(String email) {
 		if (this.userDao.existsByEmail(email)) {
-			throw new EntityAlreadyExistsException("Email is already exists!");
+			throw new EntityAlreadyExistsException(BusinessMessages.EMAIL_ALREADY_EXISTS);
 		}
 	}
 

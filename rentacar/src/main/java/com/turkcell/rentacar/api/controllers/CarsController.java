@@ -67,7 +67,8 @@ public class CarsController {
 
 	@Transactional
 	@PostMapping("/updateColor")
-	public Result updateColor(@RequestBody @Valid UpdateColorToCarRequest updateColorToCarRequest) {
+	public Result updateColor(
+			@RequestBody @Valid UpdateColorToCarRequest updateColorToCarRequest) {
 		return this.carService.updateColor(updateColorToCarRequest);
 	}
 
@@ -82,6 +83,7 @@ public class CarsController {
 			@RequestParam(value = "dailyPrice") double dailyPrice) {
 		return this.carService.findByDailyPriceLessThanEqual(dailyPrice);
 	}
+	
 
 	@GetMapping("/getAllPaged")
 	public DataResult<List<CarListDto>> getAllPaged(@RequestParam(value = "pageNo") int pageNo,

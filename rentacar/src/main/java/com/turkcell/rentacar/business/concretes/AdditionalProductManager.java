@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentacar.business.abstracts.AdditionalProductService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.listDtos.AdditionalProductListDto;
 import com.turkcell.rentacar.business.requests.createRequests.CreateAdditionalProductRequest;
 import com.turkcell.rentacar.business.requests.deleteRequests.DeleteAdditionalProductRequest;
@@ -43,7 +44,7 @@ public class AdditionalProductManager implements AdditionalProductService {
 
 		this.additionalProductDao.save(additionalProduct);
 
-		return new SuccessResult("AdditionalProduct added successfully.");
+		return new SuccessResult(BusinessMessages.ADDITIONAL_PRODUCT_ADDED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -56,7 +57,7 @@ public class AdditionalProductManager implements AdditionalProductService {
 
 		this.additionalProductDao.save(additionalProduct);
 
-		return new SuccessResult("AdditionalProduct updated successfully.");
+		return new SuccessResult(BusinessMessages.ADDITIONAL_PRODUCT_UPDATED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -69,7 +70,7 @@ public class AdditionalProductManager implements AdditionalProductService {
 
 		this.additionalProductDao.delete(additionalProduct);
 
-		return new SuccessResult("AdditionalProduct deleted successfully.");
+		return new SuccessResult(BusinessMessages.ADDITIONAL_PRODUCT_DELETED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -80,18 +81,18 @@ public class AdditionalProductManager implements AdditionalProductService {
 				.forDto().map(additionalProduct, AdditionalProductListDto.class)).collect(Collectors.toList());
 
 		return new SuccessDataResult<List<AdditionalProductListDto>>(response,
-				"AdditionalProducts listed successfully.");
+				BusinessMessages.ADDITIONAL_PRODUCT_LISTED_SUCCESSFULLY);
 	}
 
 	private void checkIfAdditionalProductExists(int additionalProductId) {
 		if (!this.additionalProductDao.existsByAdditionalProductId(additionalProductId)) {
-			throw new EntityNotFoundException("AdditionalProduct not found!");
+			throw new EntityNotFoundException(BusinessMessages.ADDITIONAL_PRODUCT_NOT_FOUND);
 		}
 	}
 
 	private void checkIfAdditionalProducNameExists(String additionalProductName) {
 		if (this.additionalProductDao.existsByAdditionalProductName(additionalProductName)) {
-			throw new EntityAlreadyExistsException("AdditionalProduct already exists!");
+			throw new EntityAlreadyExistsException(BusinessMessages.ADDITIONAL_PRODUCT_ALREADY_EXISTS);
 		}
 	}
 

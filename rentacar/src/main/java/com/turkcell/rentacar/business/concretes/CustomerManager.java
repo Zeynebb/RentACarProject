@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentacar.business.abstracts.CustomerService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.listDtos.CustomerListDto;
 import com.turkcell.rentacar.core.utilities.mapping.ModelMapperService;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
@@ -34,7 +35,7 @@ public class CustomerManager implements CustomerService {
 				.map(customer -> modelMapperService.forDto().map(customer, CustomerListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<CustomerListDto>>(response, "Customers listed successfully.");
+		return new SuccessDataResult<List<CustomerListDto>>(response, BusinessMessages.CUSTOMERS_LISTED_SUCCESSFULLY);
 	}
 
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentacar.business.abstracts.IndividualCustomerService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.requests.createRequests.CreateIndividualCustomerRequest;
 import com.turkcell.rentacar.business.requests.deleteRequests.DeleteIndividualCustomerRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateIndividualCustomerRequest;
@@ -43,7 +44,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 
 		this.individualCustomerDao.save(individualCustomer);
 
-		return new SuccessResult("Individual customer added successfully.");
+		return new SuccessResult(BusinessMessages.INDIVIDUAL_CUSTOMER_ADDED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -58,7 +59,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 
 		this.individualCustomerDao.save(individualCustomer);
 
-		return new SuccessResult("Individual customer updated successfully.");
+		return new SuccessResult(BusinessMessages.INDIVIDUAL_CUSTOMER_UPDATED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -71,24 +72,24 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 
 		this.individualCustomerDao.delete(individualCustomer);
 
-		return new SuccessResult("Individual customer deleted successfully.");
+		return new SuccessResult(BusinessMessages.INDIVIDUAL_CUSTOMER_DELETED_SUCCESSFULLY);
 	}
 
 	private void checkIfIndividualCustomerExists(int individualCustomerId) {
 		if (!this.individualCustomerDao.existsById(individualCustomerId)) {
-			throw new EntityNotFoundException("Individual Customer not found!");
+			throw new EntityNotFoundException(BusinessMessages.INDIVIDUAL_CUSTOMER_NOT_FOUND);
 		}
 	}
 
 	private void checkIfEmailExists(String email) {
 		if (this.individualCustomerDao.existsByEmail(email)) {
-			throw new EntityAlreadyExistsException("Email already exists!");
+			throw new EntityAlreadyExistsException(BusinessMessages.EMAIL_ALREADY_EXISTS);
 		}
 	}
 
 	private void checkIfNationalIdentityIsReal(String nationalIdentity) {
 		if (!this.nationalIdentityService.checkNationalIdentity(nationalIdentity)) {
-			throw new NationalIdentityNotValidException("NationalIdentity not valid!");
+			throw new NationalIdentityNotValidException(BusinessMessages.NATIONAL_IDENTITY_NOT_VALID);
 		}
 	}
 

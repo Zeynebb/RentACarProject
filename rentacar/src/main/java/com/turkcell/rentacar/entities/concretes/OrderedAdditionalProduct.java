@@ -37,4 +37,8 @@ public class OrderedAdditionalProduct {
 	@JoinColumn(name = "additional_product_id")
 	private AdditionalProduct additionalProduct;
 
+	@ManyToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "payment_id")
+	private Payment payment;
+
 }

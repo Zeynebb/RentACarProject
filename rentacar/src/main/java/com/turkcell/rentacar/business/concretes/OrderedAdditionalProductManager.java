@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentacar.business.abstracts.OrderedAdditionalProductService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.listDtos.OrderedAdditionalProductListDto;
 import com.turkcell.rentacar.business.requests.createRequests.CreateOrderedAdditionalProductRequest;
 import com.turkcell.rentacar.business.requests.deleteRequests.DeleteOrderedAdditionalProductRequest;
@@ -43,7 +44,7 @@ public class OrderedAdditionalProductManager implements OrderedAdditionalProduct
 		orderedAdditionalProduct.setOrderedAdditionalProductId(0);
 		this.orderedAdditionalProductDao.save(orderedAdditionalProduct);
 
-		return new SuccessResult("OrderedAdditionalProduct added successfully.");
+		return new SuccessResult(BusinessMessages.ORDERED_ADDITIONAL_PRODUCT_ADDED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -56,7 +57,7 @@ public class OrderedAdditionalProductManager implements OrderedAdditionalProduct
 
 		this.orderedAdditionalProductDao.save(orderedAdditionalProduct);
 
-		return new SuccessResult("OrderedAdditionalProduct updated successfully.");
+		return new SuccessResult(BusinessMessages.ORDERED_ADDITIONAL_PRODUCT_UPDATED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -69,7 +70,7 @@ public class OrderedAdditionalProductManager implements OrderedAdditionalProduct
 
 		this.orderedAdditionalProductDao.delete(orderedAdditionalProduct);
 
-		return new SuccessResult("OrderedAdditionalProduct deleted successfully.");
+		return new SuccessResult(BusinessMessages.ORDERED_ADDITIONAL_PRODUCT_DELETED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -82,7 +83,7 @@ public class OrderedAdditionalProductManager implements OrderedAdditionalProduct
 				.collect(Collectors.toList());
 
 		return new SuccessDataResult<List<OrderedAdditionalProductListDto>>(response,
-				"OrderedAdditionalProducts listed successfully.");
+				BusinessMessages.ORDERED_ADDITIONAL_PRODUCTS_LISTED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -95,7 +96,7 @@ public class OrderedAdditionalProductManager implements OrderedAdditionalProduct
 				.collect(Collectors.toList());
 
 		return new SuccessDataResult<List<OrderedAdditionalProductListDto>>(response,
-				"OrderedAdditionalProducts for Rent listed successfully.");
+				BusinessMessages.ORDERED_ADDITIONAL_PRODUCT_FOR_RENT_LISTED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -117,28 +118,28 @@ public class OrderedAdditionalProductManager implements OrderedAdditionalProduct
 		}
 
 		return new SuccessDataResult<Double>(orderedAdditionalProductsPrice,
-				"OrderedAdditionalProducts price calculated successfully.");
+				BusinessMessages.ORDERED_ADDITIONAL_PRODUCT_PRICE_CALCULATED_SUCCESSFULLY);
 	}
 
 	@Override
 	public Result checkIfRentExists(int rentId) {
 
 		if (this.orderedAdditionalProductDao.existsByRent_RentId(rentId)) {
-			return new SuccessResult("Rent is exists in OrderedAdditionalProduct.");
+			return new SuccessResult(BusinessMessages.RENT_ALREADY_EXISTS_IN_ORDERED_ADDITIONAL_PRODUCT);
 		}
 
-		return new ErrorResult("Rent is not exists in OrderedAdditionalProduct.");
+		return new ErrorResult(BusinessMessages.RENT_NOT_EXISTS_IN_ORDERED_ADDITIONAL_PRODUCT);
 	}
 
 	private void checkIfRentExistsIsSuccess(int rentId) {
 		if (!checkIfRentExists(rentId).isSuccess()) {
-			throw new EntityNotFoundException("Rent is not exists in OrderedAdditionalProduct.");
+			throw new EntityNotFoundException(BusinessMessages.RENT_NOT_EXISTS_IN_ORDERED_ADDITIONAL_PRODUCT);
 		}
 	}
 
 	private void checkIfOrderedAdditionalProductExists(int orderedAdditionalProductId) {
 		if (!this.orderedAdditionalProductDao.existsById(orderedAdditionalProductId)) {
-			throw new EntityNotFoundException("OrderedAdditionalProduct is not found!");
+			throw new EntityNotFoundException(BusinessMessages.ORDERED_ADDITIONAL_PRODUCT_NOT_FOUND);
 		}
 	}
 

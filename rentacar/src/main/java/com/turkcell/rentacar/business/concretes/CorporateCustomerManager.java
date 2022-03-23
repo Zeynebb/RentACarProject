@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentacar.business.abstracts.CorporateCustomerService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.requests.createRequests.CreateCorporateCustomerRequest;
 import com.turkcell.rentacar.business.requests.deleteRequests.DeleteCorporateCustomerRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateCorporateCustomerRequest;
@@ -37,7 +38,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 
 		this.corporateCustomerDao.save(corporateCustomer);
 
-		return new SuccessResult("Corporate customer added successfully.");
+		return new SuccessResult(BusinessMessages.CORPORATE_CUSTOMER_ADDED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -51,7 +52,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 
 		this.corporateCustomerDao.save(corporateCustomer);
 
-		return new SuccessResult("Corporate customer updated successfully.");
+		return new SuccessResult(BusinessMessages.CORPORATE_CUSTOMER_UPDATED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -64,18 +65,18 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 
 		this.corporateCustomerDao.delete(corporateCustomer);
 
-		return new SuccessResult("Corporate customer deleted successfully.");
+		return new SuccessResult(BusinessMessages.CORPORATE_CUSTOMER_DELETED_SUCCESSFULLY);
 	}
 
 	private void checkIfCorporateCustomerExists(int corporateCustomerId) {
 		if (!this.corporateCustomerDao.existsById(corporateCustomerId)) {
-			throw new EntityNotFoundException("Corporate Customer not found!");
+			throw new EntityNotFoundException(BusinessMessages.CORPORATE_CUSTOMER_NOT_FOUND);
 		}
 	}
 
 	private void checkIfEmailExists(String email) {
 		if (this.corporateCustomerDao.existsByEmail(email)) {
-			throw new EntityAlreadyExistsException("Email already exists!");
+			throw new EntityAlreadyExistsException(BusinessMessages.EMAIL_ALREADY_EXISTS);
 		}
 	}
 

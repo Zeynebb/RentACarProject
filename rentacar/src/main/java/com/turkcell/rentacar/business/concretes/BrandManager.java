@@ -1,6 +1,7 @@
 package com.turkcell.rentacar.business.concretes;
 
 import com.turkcell.rentacar.business.abstracts.BrandService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.listDtos.BrandListDto;
 import com.turkcell.rentacar.business.requests.createRequests.CreateBrandRequest;
 import com.turkcell.rentacar.business.requests.deleteRequests.DeleteBrandRequest;
@@ -41,7 +42,7 @@ public class BrandManager implements BrandService {
 				.map(brand -> this.modelMapperService.forDto().map(brand, BrandListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<BrandListDto>>(response, "Brands listed successfully.");
+		return new SuccessDataResult<List<BrandListDto>>(response, BusinessMessages.BRANDS_LISTED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -53,7 +54,7 @@ public class BrandManager implements BrandService {
 
 		this.brandDao.save(brand);
 
-		return new SuccessResult("Brand added successfully.");
+		return new SuccessResult(BusinessMessages.BRAND_ADDED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -62,7 +63,7 @@ public class BrandManager implements BrandService {
 		Brand result = this.brandDao.getBrandByBrandId(id);
 		BrandListDto response = this.modelMapperService.forDto().map(result, BrandListDto.class);
 
-		return new SuccessDataResult<BrandListDto>(response, "Brand listed successfully.");
+		return new SuccessDataResult<BrandListDto>(response, BusinessMessages.BRAND_LISTED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -75,7 +76,7 @@ public class BrandManager implements BrandService {
 
 		this.brandDao.save(brand);
 
-		return new SuccessResult("Brand updated successfully.");
+		return new SuccessResult(BusinessMessages.BRAND_UPDATED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -87,18 +88,18 @@ public class BrandManager implements BrandService {
 
 		this.brandDao.deleteById(brand.getBrandId());
 
-		return new SuccessResult("Brand deleted successfully.");
+		return new SuccessResult(BusinessMessages.BRAND_DELETED_SUCCESSFULLY);
 	}
 
 	private void checkIfBrandExists(int brandId) {
 		if (!this.brandDao.existsById(brandId)) {
-			throw new EntityNotFoundException("Brand not found!");
+			throw new EntityNotFoundException(BusinessMessages.BRAND_ALREADY_EXISTS);
 		}
 	}
 
 	private void checkIfBrandNameExists(String brandName) {
 		if (this.brandDao.existsBrandByBrandName(brandName)) {
-			throw new EntityAlreadyExistsException("Brand already exists.");
+			throw new EntityAlreadyExistsException(BusinessMessages.BRAND_NOT_FOUND);
 		}
 	}
 }

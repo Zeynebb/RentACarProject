@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.turkcell.rentacar.business.abstracts.InvoiceService;
 import com.turkcell.rentacar.business.abstracts.OrderedAdditionalProductService;
 import com.turkcell.rentacar.business.abstracts.RentService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.listDtos.InvioceListDto;
 import com.turkcell.rentacar.business.requests.createRequests.CreateInvoiceRequest;
 import com.turkcell.rentacar.business.requests.deleteRequests.DeleteInvoiceRequest;
@@ -51,7 +52,7 @@ public class InvoiceManager implements InvoiceService {
 
 		this.invoiceDao.save(invoice);
 
-		return new SuccessResult("Invoice added successfully.");
+		return new SuccessResult(BusinessMessages.INVOICE_ADDED_SUCCESSFULLY);
 
 	}
 
@@ -66,7 +67,7 @@ public class InvoiceManager implements InvoiceService {
 
 		this.invoiceDao.save(invoice);
 
-		return new SuccessResult("Invoice updated successfully.");
+		return new SuccessResult(BusinessMessages.INVOICE_UPDATED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -76,7 +77,7 @@ public class InvoiceManager implements InvoiceService {
 
 		this.invoiceDao.delete(invoice);
 
-		return new SuccessResult("Invoice deleted successfully.");
+		return new SuccessResult(BusinessMessages.INVOICE_DELETED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -87,7 +88,7 @@ public class InvoiceManager implements InvoiceService {
 				.map(invoice -> modelMapperService.forDto().map(invoice, InvioceListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<InvioceListDto>>(response, "Invoices listed successfully.");
+		return new SuccessDataResult<List<InvioceListDto>>(response, BusinessMessages.INVOICES_LISTED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -98,7 +99,7 @@ public class InvoiceManager implements InvoiceService {
 		Invoice result = this.invoiceDao.getByRent_RentId(rentId);
 		InvioceListDto response = this.modelMapperService.forDto().map(result, InvioceListDto.class);
 
-		return new SuccessDataResult<InvioceListDto>(response, "Invoice listed successfully.");
+		return new SuccessDataResult<InvioceListDto>(response, BusinessMessages.INVOICE_LISTED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -106,7 +107,8 @@ public class InvoiceManager implements InvoiceService {
 
 		List<OrderedAdditionalProduct> result = this.rentService.getOrderedAdditionalProductsByRentId(rentId).getData();
 
-		return new SuccessDataResult<List<OrderedAdditionalProduct>>(result, "Invoice listed successfully.");
+		return new SuccessDataResult<List<OrderedAdditionalProduct>>(result,
+				BusinessMessages.INVOICE_LISTED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -119,7 +121,8 @@ public class InvoiceManager implements InvoiceService {
 				.map(invoice -> modelMapperService.forDto().map(invoice, InvioceListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<InvioceListDto>>(response, "User's invoice listed successfully.");
+		return new SuccessDataResult<List<InvioceListDto>>(response,
+				BusinessMessages.USERS_INVOICES_LISTED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -131,7 +134,7 @@ public class InvoiceManager implements InvoiceService {
 				.collect(Collectors.toList());
 
 		return new SuccessDataResult<List<InvioceListDto>>(response,
-				"Invoices between start date and end date listed successfully.");
+				BusinessMessages.INVOICE_BETWEEN_START_DATE_AND_END_DATE_LISTED_SUCCESSFULLY);
 	}
 
 	private double calculateTotalPrice(Invoice invoice) {
@@ -161,7 +164,7 @@ public class InvoiceManager implements InvoiceService {
 
 	private void checkIfInvoiceExists(int invoiceId) {
 		if (!this.invoiceDao.existsById(invoiceId)) {
-			throw new EntityNotFoundException("Invoice not found!");
+			throw new EntityNotFoundException(BusinessMessages.INVOICE_NOT_FOUND);
 		}
 	}
 
@@ -174,13 +177,13 @@ public class InvoiceManager implements InvoiceService {
 
 	private void checkIfRentExists(int rentId) {
 		if (!this.invoiceDao.existsByRent_RentId(rentId)) {
-			throw new EntityNotFoundException("Rent not found!");
+			throw new EntityNotFoundException(BusinessMessages.RENT_NOT_FOUND);
 		}
 	}
 
 	private void checkIfUserExists(int userId) {
 		if (!this.invoiceDao.existsByUser_UserId(userId)) {
-			throw new EntityNotFoundException("User not found!");
+			throw new EntityNotFoundException(BusinessMessages.USER_NOT_FOUND);
 		}
 	}
 

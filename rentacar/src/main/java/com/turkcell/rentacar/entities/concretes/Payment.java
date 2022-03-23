@@ -1,6 +1,7 @@
 package com.turkcell.rentacar.entities.concretes;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,8 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import com.turkcell.rentacar.entities.abstracts.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,30 +22,34 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "invoices")
-public class Invoice {
+@Table(name = "payments")
+public class Payment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "invoice_id")
-	private int invoiceId;
+	@Column(name = "payment_id")
+	private int paymentId;
 
-	@Column(name = "invoice_create_date")
-	private LocalDate invoiceCreateDate = LocalDate.now();
+	@Column(name = "credit_card_no")
+	private String creditCardNo;
 
-	@Column(name = "total_price")
-	private double totalPrice;
+	@Column(name = "card_holder")
+	private String cardHolder;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
+	@Column(name = "expiration_date")
+	private LocalDate expirationDate;
+
+	@Column(name = "cvv")
+	private String cvv;
 
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "rent_id")
 	private Rent rent;
 
-	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "payment_id")
-	private Payment payment;
+	@OneToMany(mappedBy = "payment")
+	private List<OrderedAdditionalProduct> orderedAdditionalProducts;
+
+	@OneToMany(mappedBy = "payment")
+	private List<Invoice> invoices;
 
 }

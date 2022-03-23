@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import com.turkcell.rentacar.business.abstracts.CarMaintenanceService;
 import com.turkcell.rentacar.business.abstracts.RentService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.getDtos.CarMaintenanceGetDto;
 import com.turkcell.rentacar.business.dtos.listDtos.CarMaintenanceListDto;
 import com.turkcell.rentacar.business.requests.createRequests.CreateCarMaintenanceRequest;
@@ -50,7 +51,8 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 				carMaintenance -> this.modelMapperService.forDto().map(carMaintenance, CarMaintenanceListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<CarMaintenanceListDto>>(response, "CarMaintenances listed successfully.");
+		return new SuccessDataResult<List<CarMaintenanceListDto>>(response,
+				BusinessMessages.CAR_MAINTENANCES_LISTED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -59,7 +61,8 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 		CarMaintenance result = this.carMaintenanceDao.getById(carMaintenanceId);
 		CarMaintenanceGetDto response = this.modelMapperService.forDto().map(result, CarMaintenanceGetDto.class);
 
-		return new SuccessDataResult<CarMaintenanceGetDto>(response, "CarMaintenance listed successfully.");
+		return new SuccessDataResult<CarMaintenanceGetDto>(response,
+				BusinessMessages.CAR_MAINTENANCE_LISTED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -74,7 +77,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
 		this.carMaintenanceDao.save(carMaintenance);
 
-		return new SuccessResult("CarMaintenance added successfully.");
+		return new SuccessResult(BusinessMessages.CAR_MAINTENANCE_ADDED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -88,7 +91,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
 		this.carMaintenanceDao.save(carMaintenance);
 
-		return new SuccessResult("CarMaintenance updated successfully.");
+		return new SuccessResult(BusinessMessages.CAR_MAINTENANCE_UPDATED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -101,7 +104,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
 		this.carMaintenanceDao.delete(carMaintenance);
 
-		return new SuccessResult("CarMaintenance deleted successfully.");
+		return new SuccessResult(BusinessMessages.CAR_MAINTENANCE_DELETED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -113,23 +116,23 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 				.collect(Collectors.toList());
 
 		return new SuccessDataResult<List<CarMaintenanceListDto>>(response,
-				"CarMaintenances for Car listed successfully.");
+				BusinessMessages.CAR_MAINTENANCES_FOR_CAR_LISTED_SUCCESSFULLY);
 	}
 
 	@Override
 	public Result checkIfCarIsAlreadyInMaintenance(int carId) {
 		for (CarMaintenance carMaintenance : this.carMaintenanceDao.getByCar_CarId(carId)) {
 			if (carMaintenance.getReturnDate() != null) {
-				return new SuccessResult("Car not in maintenance");
+				return new SuccessResult(BusinessMessages.CAR_NOT_IN_MAINTENANCE);
 			}
 		}
-		return new ErrorResult("Car in maintenance!");
+		return new ErrorResult(BusinessMessages.CAR_ALREADY_IN_MAINTENANCE);
 	}
 
 	private void checkIfCarIsAlreadyInMaintenanceIsSuccess(int carId) {
 		if (this.carMaintenanceDao.existsByCar_CarId(carId)) {
 			if (!checkIfCarIsAlreadyInMaintenance(carId).isSuccess()) {
-				throw new CarIsAlreadyInMaintenanceException("Car in maintenance!");
+				throw new CarIsAlreadyInMaintenanceException(BusinessMessages.CAR_ALREADY_IN_MAINTENANCE);
 			}
 		}
 	}
@@ -137,7 +140,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 	private void checkIfCarIsAlreadyInRent(int carId) {
 		if (!checkIfCarExistInRentTable(carId)) {
 			if (!this.rentService.checkIfCarAlreadyInRent(carId).isSuccess()) {
-				throw new CarIsAlreadyInRentException("The Car cannot be sent for maintenance because it is on Rent.");
+				throw new CarIsAlreadyInRentException(BusinessMessages.CAR_ALREADY_IN_RENT);
 			}
 		}
 	}
@@ -148,14 +151,14 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
 	private void existByCarMaintenance(int carMaintenanceId) {
 		if (!this.carMaintenanceDao.existsById(carMaintenanceId)) {
-			throw new EntityNotFoundException("CarMaintenance not found!");
+			throw new EntityNotFoundException(BusinessMessages.CAR_MAINTENANCE_NOT_FOUND);
 		}
 	}
 
 	private void checkIfReturnDateIsAfterNow(LocalDate returnDate) {
 		if (returnDate != null) {
 			if (returnDate.isAfter(LocalDate.now())) {
-				throw new ReturnDateIsAfterNowException("A future date cannot be entered!");
+				throw new ReturnDateIsAfterNowException(BusinessMessages.A_FUTURE_DATE_CANNOT_BE_ENTERED);
 			}
 		}
 	}

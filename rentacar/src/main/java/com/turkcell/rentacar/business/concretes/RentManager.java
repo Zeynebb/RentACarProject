@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.turkcell.rentacar.business.abstracts.CarMaintenanceService;
 import com.turkcell.rentacar.business.abstracts.RentService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.getDtos.RentGetDto;
 import com.turkcell.rentacar.business.dtos.listDtos.RentListDto;
 import com.turkcell.rentacar.business.requests.createRequests.CreateRentRequest;
@@ -56,7 +57,7 @@ public class RentManager implements RentService {
 
 		this.rentDao.save(rent);
 
-		return new SuccessResult("Rent added successfully.");
+		return new SuccessResult(BusinessMessages.RENT_ADDED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -71,7 +72,7 @@ public class RentManager implements RentService {
 
 		this.rentDao.save(rent);
 
-		return new SuccessResult("Rent added successfully.");
+		return new SuccessResult(BusinessMessages.RENT_ADDED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -83,7 +84,7 @@ public class RentManager implements RentService {
 
 		this.rentDao.save(rent);
 
-		return new SuccessResult("Rent updated successfully.");
+		return new SuccessResult(BusinessMessages.RENT_UPDATED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -93,7 +94,7 @@ public class RentManager implements RentService {
 
 		this.rentDao.delete(rent);
 
-		return new SuccessResult("Rent deleted successfully.");
+		return new SuccessResult(BusinessMessages.RENT_DELETED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -103,7 +104,7 @@ public class RentManager implements RentService {
 		List<RentListDto> response = result.stream()
 				.map(rent -> modelMapperService.forDto().map(rent, RentListDto.class)).collect(Collectors.toList());
 
-		return new SuccessDataResult<List<RentListDto>>(response, "Rent listed successfully.");
+		return new SuccessDataResult<List<RentListDto>>(response, BusinessMessages.RENTS_LISTED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -112,7 +113,7 @@ public class RentManager implements RentService {
 		Rent result = this.rentDao.getById(rentId);
 		RentGetDto response = this.modelMapperService.forDto().map(result, RentGetDto.class);
 
-		return new SuccessDataResult<RentGetDto>(response, "Rents listed successfully.");
+		return new SuccessDataResult<RentGetDto>(response, BusinessMessages.RENT_LISTED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -122,17 +123,17 @@ public class RentManager implements RentService {
 		List<RentListDto> response = result.stream()
 				.map(rent -> modelMapperService.forDto().map(rent, RentListDto.class)).collect(Collectors.toList());
 
-		return new SuccessDataResult<List<RentListDto>>(response, "Rent for Car listed successfuly.");
+		return new SuccessDataResult<List<RentListDto>>(response, BusinessMessages.RENTS_FOR_CAR_LISTED_SUCCESSFULLY);
 	}
 
 	@Override
 	public Result checkIfCarAlreadyInRent(int carId) {
 		for (Rent rent : this.rentDao.getByCar_CarId(carId)) {
 			if (!rent.isRentStatus()) {
-				return new SuccessResult("Car not in Rent!");
+				return new SuccessResult(BusinessMessages.CAR_NOT_IN_RENT);
 			}
 		}
-		return new ErrorResult("Car in Rent!");
+		return new ErrorResult(BusinessMessages.CAR_ALREADY_IN_RENT);
 	}
 
 	@Override
@@ -141,7 +142,7 @@ public class RentManager implements RentService {
 		List<OrderedAdditionalProduct> result = this.rentDao.getOrderedAdditionalProductsByRentId(rentId);
 
 		return new SuccessDataResult<List<OrderedAdditionalProduct>>(result,
-				"OrderedAdditionalProducts for Rent listed successfully.");
+				BusinessMessages.ORDERED_ADDITIONAL_PRODUCT_FOR_RENT_LISTED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -153,7 +154,7 @@ public class RentManager implements RentService {
 
 		double rentTotalPrice = (rent.getCar().getDailyPrice() * usageTime);
 
-		return new SuccessDataResult<>(rentTotalPrice, "Rent total price calculated successfully.");
+		return new SuccessDataResult<>(rentTotalPrice, BusinessMessages.RENT_TOTAL_PRICE_CALCULATED_SUCCESSFULLY);
 	}
 
 	@Override
@@ -162,10 +163,10 @@ public class RentManager implements RentService {
 		Rent rent = this.rentDao.getById(rentId);
 
 		if (!rent.getRentalCity().equals(rent.getReturnCity())) {
-			return new SuccessResult("Cities are different!");
+			return new SuccessResult(BusinessMessages.CITIES_ARE_DIFFERENT);
 		}
 
-		return new ErrorResult("Cities are same!");
+		return new ErrorResult(BusinessMessages.CITIES_ARE_SAME);
 	}
 
 	@Override
@@ -174,13 +175,13 @@ public class RentManager implements RentService {
 		this.rentDao.updateEndedKilometerInfoToRentByRentId(updateEndedKilometerInfoRequest.getRentId(),
 				updateEndedKilometerInfoRequest.getEndedKilometerInfo());
 
-		return new SuccessResult("EndedKilometerInfo updated successfully.");
+		return new SuccessResult(BusinessMessages.ENDED_KILOMETER_INFO_UPDATED_SUCCESSFULLY);
 	}
 
 	private void checkIfCarAlreadyInRentIsSuccess(int carId) {
 		if (this.rentDao.existsByCar_CarId(carId)) {
 			if (!checkIfCarAlreadyInRent(carId).isSuccess()) {
-				throw new CarIsAlreadyInRentException("Car in Rent!");
+				throw new CarIsAlreadyInRentException(BusinessMessages.CAR_ALREADY_IN_RENT);
 			}
 		}
 	}
@@ -188,7 +189,7 @@ public class RentManager implements RentService {
 	private void checkIfCarAlreadyInMaintenance(int carId) {
 		if (!checkIfCarExistInCarMaintenanceTable(carId)) {
 			if (!this.carMaintenanceService.checkIfCarIsAlreadyInMaintenance(carId).isSuccess()) {
-				throw new CarIsAlreadyInMaintenanceException("The Car cannot be rented as it is in maintenance.");
+				throw new CarIsAlreadyInMaintenanceException(BusinessMessages.CAR_ALREADY_IN_MAINTENANCE);
 			}
 		}
 	}

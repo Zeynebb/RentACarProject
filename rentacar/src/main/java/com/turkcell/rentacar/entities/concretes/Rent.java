@@ -67,5 +67,8 @@ public class Rent {
 
 	@OneToMany(mappedBy = "rent")
 	private List<Invoice> invoices;
+	
+	@OneToMany(mappedBy = "rent")
+	private List<Payment> payments;
 
 }
