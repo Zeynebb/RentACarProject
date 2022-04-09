@@ -87,7 +87,7 @@ public class OrderedAdditionalProductManager implements OrderedAdditionalProduct
 	}
 
 	@Override
-	public DataResult<List<OrderedAdditionalProductListDto>> getByRentId(int rentId) {
+	public DataResult<List<OrderedAdditionalProductListDto>> getByRentId(String rentId) {
 
 		List<OrderedAdditionalProduct> result = this.orderedAdditionalProductDao.getByRent_RentId(rentId);
 		List<OrderedAdditionalProductListDto> response = result.stream()
@@ -100,7 +100,7 @@ public class OrderedAdditionalProductManager implements OrderedAdditionalProduct
 	}
 
 	@Override
-	public DataResult<Double> calculateOrderedAdditionalPrice(int rentId) {
+	public DataResult<Double> calculateOrderedAdditionalPrice(String rentId) {
 
 		checkIfRentExistsIsSuccess(rentId);
 
@@ -122,7 +122,7 @@ public class OrderedAdditionalProductManager implements OrderedAdditionalProduct
 	}
 
 	@Override
-	public Result checkIfRentExists(int rentId) {
+	public Result checkIfRentExists(String rentId) {
 
 		if (this.orderedAdditionalProductDao.existsByRent_RentId(rentId)) {
 			return new SuccessResult(BusinessMessages.RENT_ALREADY_EXISTS_IN_ORDERED_ADDITIONAL_PRODUCT);
@@ -131,7 +131,7 @@ public class OrderedAdditionalProductManager implements OrderedAdditionalProduct
 		return new ErrorResult(BusinessMessages.RENT_NOT_EXISTS_IN_ORDERED_ADDITIONAL_PRODUCT);
 	}
 
-	private void checkIfRentExistsIsSuccess(int rentId) {
+	private void checkIfRentExistsIsSuccess(String rentId) {
 		if (!checkIfRentExists(rentId).isSuccess()) {
 			throw new EntityNotFoundException(BusinessMessages.RENT_NOT_EXISTS_IN_ORDERED_ADDITIONAL_PRODUCT);
 		}

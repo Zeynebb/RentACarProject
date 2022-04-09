@@ -17,12 +17,12 @@ public interface OrderedAdditionalProductService {
 
 	Result delete(DeleteOrderedAdditionalProductRequest deleteOrderedAdditionalProductRequest);
 
-	Result checkIfRentExists(int rentId);
+	Result checkIfRentExists(String rentId);
 
 	DataResult<List<OrderedAdditionalProductListDto>> getAll();
 
-	DataResult<List<OrderedAdditionalProductListDto>> getByRentId(int rentId);
+	DataResult<List<OrderedAdditionalProductListDto>> getByRentId(String rentId);
 
-	DataResult<Double> calculateOrderedAdditionalPrice(int rentId);
+	DataResult<Double> calculateOrderedAdditionalPrice(String rentId);
 
 }

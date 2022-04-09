@@ -15,7 +15,7 @@ public class UpdateEndedKilometerInfoRequest {
 
 	@NotNull
 	@Min(1)
-	private int rentId;
+	private String rentId;
 
 	@NotNull
 	@Size(min = 2)

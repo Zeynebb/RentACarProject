@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.turkcell.rentacar.core.services.abstracts.BaseBankPaymentServiceAdapter;
 import com.turkcell.rentacar.entities.concretes.Payment;
-import com.turkcell.rentacar.ziraatBankPaymentService.ZiraatBankPaymentService;
+import com.turkcell.rentacar.outServices.ziraatBankPaymentService.ZiraatBankPaymentService;
 
 
 @Component
@@ -22,7 +22,6 @@ public class ZiraatBankPaymentManagerAdapter implements BaseBankPaymentServiceAd
 
 	@Override
 	public boolean payment(Payment payment) {
-		System.out.println("ziraat");
 		return this.ziraatBankPaymentService.payment(payment.getCreditCardNo(), payment.getCardHolder(),
 				payment.getExpirationDate(), payment.getCvv());
 	}

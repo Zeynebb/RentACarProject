@@ -56,17 +56,17 @@ public class OrderedAdditionalProductsController {
 	}
 
 	@GetMapping("/checkIfRentExists")
-	public Result checkIfRentExists(@RequestParam int rentId) {
+	public Result checkIfRentExists(@RequestParam String rentId) {
 		return this.orderedAdditionalProductService.checkIfRentExists(rentId);
 	}
 
 	@GetMapping("/getByRentId")
-	public DataResult<List<OrderedAdditionalProductListDto>> getByRentId(@RequestParam int rentId) {
+	public DataResult<List<OrderedAdditionalProductListDto>> getByRentId(@RequestParam String rentId) {
 		return this.orderedAdditionalProductService.getByRentId(rentId);
 	}
 
 	@GetMapping("/calculateOrderedAdditionalPrice")
-	public DataResult<Double> calculateOrderedAdditionalPrice(@RequestParam int rentId) {
+	public DataResult<Double> calculateOrderedAdditionalPrice(@RequestParam String rentId) {
 		return this.orderedAdditionalProductService.calculateOrderedAdditionalPrice(rentId);
 	}
 

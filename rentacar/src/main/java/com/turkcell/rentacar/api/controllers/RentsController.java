@@ -20,6 +20,7 @@ import com.turkcell.rentacar.business.dtos.getDtos.RentGetDto;
 import com.turkcell.rentacar.business.dtos.listDtos.RentListDto;
 import com.turkcell.rentacar.business.requests.createRequests.CreateRentRequest;
 import com.turkcell.rentacar.business.requests.deleteRequests.DeleteRentRequest;
+import com.turkcell.rentacar.business.requests.updateRequests.UpdateDeliveryDateToRentRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateEndedKilometerInfoRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateRentRequest;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
@@ -43,7 +44,7 @@ public class RentsController {
 	}
 
 	@PostMapping("/addIndividualCustomer")
-	public Result addIndividualCustomer(@RequestBody @Valid CreateRentRequest createRentRequest) {
+	public DataResult<String> addIndividualCustomer(@RequestBody @Valid CreateRentRequest createRentRequest) {
 		return this.rentService.addIndividualCustomer(createRentRequest);
 	}
 
@@ -59,6 +60,13 @@ public class RentsController {
 		return this.rentService.updateEndedKilometer(updateEndedKilometerInfoRequest);
 	}
 
+	@Transactional
+	@PostMapping("/updateDeliveryDate")
+	public Result updateDeliveryDate(
+			@RequestBody @Valid UpdateDeliveryDateToRentRequest updateDeliveryDateToRentRequest) {
+		return this.rentService.updateDeliveryDate(updateDeliveryDateToRentRequest);
+	}
+
 	@DeleteMapping("/delete")
 	public Result delete(@RequestBody @Valid DeleteRentRequest deleteRentRequest) {
 		return this.rentService.delete(deleteRentRequest);
@@ -70,8 +78,13 @@ public class RentsController {
 	}
 
 	@GetMapping("/getRentDetailsByRentId")
-	public DataResult<RentGetDto> getRentDetailsByRentId(@RequestParam int rentId) {
+	public DataResult<RentGetDto> getRentDetailsByRentId(@RequestParam String rentId) {
 		return this.rentService.getRentDetailsByRentId(rentId);
+	}
+
+	@GetMapping("/getByCarId")
+	public DataResult<List<RentGetDto>> getByCarId(int carId) {
+		return this.rentService.getByCarId(carId);
 	}
 
 	@GetMapping("/checkIfCarAlreadyInRent")

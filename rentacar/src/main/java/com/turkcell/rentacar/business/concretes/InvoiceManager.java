@@ -48,7 +48,11 @@ public class InvoiceManager implements InvoiceService {
 
 		Invoice invoice = this.modelMapperService.forRequest().map(createInvoiceRequest, Invoice.class);
 
-		invoice.setTotalPrice(calculateTotalPrice(invoice));
+		if (checkIfDeliverDateAndRentReturnDateIsDifferent(invoice.getRent().getRentId())) {
+			invoice.setTotalPrice(calculateDelayedDayPrice(invoice.getRent().getRentId()));
+		} else {
+			invoice.setTotalPrice(calculateTotalPrice(invoice));
+		}
 
 		this.invoiceDao.save(invoice);
 
@@ -57,7 +61,7 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	@Override
-	public Result Update(UpdateInvoiceRequest updateInvoiceRequest) {
+	public Result update(UpdateInvoiceRequest updateInvoiceRequest) {
 
 		checkIfInvoiceExists(updateInvoiceRequest.getInvoiceId());
 
@@ -71,7 +75,7 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	@Override
-	public Result Delete(DeleteInvoiceRequest deleteInvoiceRequest) {
+	public Result delete(DeleteInvoiceRequest deleteInvoiceRequest) {
 
 		Invoice invoice = this.modelMapperService.forRequest().map(deleteInvoiceRequest, Invoice.class);
 
@@ -92,7 +96,7 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	@Override
-	public DataResult<InvioceListDto> getByRentId(int rentId) {
+	public DataResult<InvioceListDto> getByRentId(String rentId) {
 
 		checkIfRentExists(rentId);
 
@@ -103,7 +107,7 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	@Override
-	public DataResult<List<OrderedAdditionalProduct>> getOrderedAdditionalProductByRentId(int rentId) {
+	public DataResult<List<OrderedAdditionalProduct>> getOrderedAdditionalProductByRentId(String rentId) {
 
 		List<OrderedAdditionalProduct> result = this.rentService.getOrderedAdditionalProductsByRentId(rentId).getData();
 
@@ -144,44 +148,64 @@ public class InvoiceManager implements InvoiceService {
 				+ calculateIfCityIsDifferentPrice(invoice.getRent().getRentId());
 	}
 
-	private double calculateRentTotalPrice(int rentId) {
+	private double calculateRentTotalPrice(String rentId) {
 		return this.rentService.calculateRentTotalPrice(rentId).getData();
 	}
 
-	private double calculateOrderedAdditionalPrice(int rentId) {
+	private double calculateOrderedAdditionalPrice(String rentId) {
+
 		if (checkIfInvoiceHasOrderedAdditionalProduct(rentId)) {
 			return this.orderedAdditionalProductService.calculateOrderedAdditionalPrice(rentId).getData();
 		}
 		return 0;
 	}
 
-	private double calculateIfCityIsDifferentPrice(int rentId) {
+	private double calculateIfCityIsDifferentPrice(String rentId) {
+
 		if (this.rentService.checkIfReturnCityIsDifferentForRentalCityIsSuccess(rentId).isSuccess()) {
 			return 750;
 		}
 		return 0;
 	}
 
+	private double calculateDelayedDayPrice(String rentId) {
+
+		if (this.rentService.calculateDelayedDayPriceForRent(rentId).isSuccess()) {
+			return this.rentService.calculateDelayedDayPriceForRent(rentId).getData()
+					+ calculateOrderedAdditionalPrice(rentId);
+		}
+
+		return 0;
+	}
+
+	private boolean checkIfDeliverDateAndRentReturnDateIsDifferent(String rentId) {
+		return this.rentService.calculateDelayedDayPriceForRent(rentId).isSuccess();
+	}
+
 	private void checkIfInvoiceExists(int invoiceId) {
+
 		if (!this.invoiceDao.existsById(invoiceId)) {
 			throw new EntityNotFoundException(BusinessMessages.INVOICE_NOT_FOUND);
 		}
 	}
 
-	private boolean checkIfInvoiceHasOrderedAdditionalProduct(int rentId) {
+	private boolean checkIfInvoiceHasOrderedAdditionalProduct(String rentId) {
+
 		if (this.orderedAdditionalProductService.checkIfRentExists(rentId).isSuccess()) {
 			return true;
 		}
 		return false;
 	}
 
-	private void checkIfRentExists(int rentId) {
+	private void checkIfRentExists(String rentId) {
+
 		if (!this.invoiceDao.existsByRent_RentId(rentId)) {
 			throw new EntityNotFoundException(BusinessMessages.RENT_NOT_FOUND);
 		}
 	}
 
 	private void checkIfUserExists(int userId) {
+
 		if (!this.invoiceDao.existsByUser_UserId(userId)) {
 			throw new EntityNotFoundException(BusinessMessages.USER_NOT_FOUND);
 		}

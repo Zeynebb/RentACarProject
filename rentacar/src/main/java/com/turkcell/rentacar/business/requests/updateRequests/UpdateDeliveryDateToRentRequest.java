@@ -1,4 +1,6 @@
-package com.turkcell.rentacar.business.requests.createRequests;
+package com.turkcell.rentacar.business.requests.updateRequests;
+
+import java.time.LocalDate;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -10,14 +12,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateInvoiceRequest {
-
-	@NotNull
-	@Min(1)
-	private int userId;
+public class UpdateDeliveryDateToRentRequest {
 
 	@NotNull
 	@Min(1)
 	private String rentId;
+
+	@NotNull
+	private LocalDate deliveryDate;
 
 }

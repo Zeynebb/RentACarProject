@@ -12,7 +12,9 @@ import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.turkcell.rentacar.entities.concretes.CreditCard;
 import com.turkcell.rentacar.entities.concretes.Invoice;
+import com.turkcell.rentacar.entities.concretes.Payment;
 import com.turkcell.rentacar.entities.concretes.Rent;
 
 import lombok.AllArgsConstructor;
@@ -43,5 +45,12 @@ public class User {
 
 	@OneToMany(mappedBy = "user")
 	private List<Invoice> invoices;
+	
+	@OneToMany(mappedBy = "user")
+	private List<CreditCard> creditCards;
+	
+	@OneToMany(mappedBy = "user")
+	private List<Payment> payment;
+	
 
 }

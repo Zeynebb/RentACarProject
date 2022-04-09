@@ -1,4 +1,4 @@
-package com.turkcell.rentacar.business.requests.createRequests;
+package com.turkcell.rentacar.business.requests.deleteRequests;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -10,14 +10,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateInvoiceRequest {
+public class DeleteCreditCardRequest {
 
 	@NotNull
 	@Min(1)
-	private int userId;
-
-	@NotNull
-	@Min(1)
-	private String rentId;
+	private int creditCardId;
 
 }

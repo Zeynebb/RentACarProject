@@ -1,6 +1,5 @@
 package com.turkcell.rentacar.api.controllers;
 
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.turkcell.rentacar.business.abstracts.PaymentService;
-import com.turkcell.rentacar.business.requests.createRequests.CreatePaymentRequest;
+import com.turkcell.rentacar.business.requests.createRequests.CreateMakePaymentRequest;
 import com.turkcell.rentacar.business.requests.deleteRequests.DeletePaymentRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdatePaymentRequest;
 import com.turkcell.rentacar.core.utilities.results.Result;
@@ -29,8 +28,8 @@ public class PaymentsController {
 	}
 
 	@PostMapping("/add")
-	public Result add(@RequestBody @Valid CreatePaymentRequest createPaymentRequest) {
-		return this.paymentService.add(createPaymentRequest);
+	public Result add(@RequestBody @Valid CreateMakePaymentRequest createMakePaymentRequest) {
+		return this.paymentService.add(createMakePaymentRequest);
 	}
 
 	@PutMapping("/update")

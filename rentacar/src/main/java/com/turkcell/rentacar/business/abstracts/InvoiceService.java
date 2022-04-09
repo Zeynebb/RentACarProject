@@ -15,13 +15,13 @@ public interface InvoiceService {
 
 	Result add(CreateInvoiceRequest createInvoiceRequest);
 
-	Result Update(UpdateInvoiceRequest updateInvoiceRequest);
+	Result update(UpdateInvoiceRequest updateInvoiceRequest);
 
-	Result Delete(DeleteInvoiceRequest deleteInvoiceRequest);
+	Result delete(DeleteInvoiceRequest deleteInvoiceRequest);
 
-	DataResult<InvioceListDto> getByRentId(int rentId);
+	DataResult<InvioceListDto> getByRentId(String rentId);
 
-	DataResult<List<OrderedAdditionalProduct>> getOrderedAdditionalProductByRentId(int rentId);
+	DataResult<List<OrderedAdditionalProduct>> getOrderedAdditionalProductByRentId(String rentId);
 
 	DataResult<List<InvioceListDto>> getAll();
 

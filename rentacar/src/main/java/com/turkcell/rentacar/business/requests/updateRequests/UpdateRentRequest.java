@@ -16,7 +16,7 @@ public class UpdateRentRequest {
 
 	@NotNull
 	@Min(1)
-	private int rentId;
+	private String rentId;
 
 	@NotNull
 	private LocalDate rentDate;

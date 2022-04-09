@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.turkcell.rentacar.core.services.abstracts.BaseBankPaymentServiceAdapter;
 import com.turkcell.rentacar.entities.concretes.Payment;
-import com.turkcell.rentacar.halkbankPaymentService.HalkbankPaymentService;
+import com.turkcell.rentacar.outServices.halkbankPaymentService.HalkbankPaymentService;
 
 @Component
 @Qualifier("halkbank")
@@ -21,7 +21,6 @@ public class HalkbankPaymentManagerAdapter implements BaseBankPaymentServiceAdap
 
 	@Override
 	public boolean payment(Payment payment) {
-		System.out.println("halkbank");
 		return this.halkbankPaymentService.payment(payment.getExpirationDate(), payment.getCvv(),
 				payment.getCreditCardNo(), payment.getCardHolder());
 	}

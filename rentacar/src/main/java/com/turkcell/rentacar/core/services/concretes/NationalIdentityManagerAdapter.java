@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.turkcell.rentacar.core.services.abstracts.BaseNationalIdentityService;
-import com.turkcell.rentacar.nationalIdentityService.NationalIdentityService;
+import com.turkcell.rentacar.outServices.nationalIdentityService.NationalIdentityService;
 
 @Component
 @Qualifier("nationalIdentityManager")

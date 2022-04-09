@@ -36,6 +36,6 @@ public class UpdatePaymentRequest {
 
 	@NotNull
 	@Min(1)
-	private int rentId;
+	private String rentId;
 
 }

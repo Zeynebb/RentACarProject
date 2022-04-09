@@ -1,6 +1,7 @@
 package com.turkcell.rentacar.entities.concretes;
 
-import javax.persistence.CascadeType;
+import java.time.LocalDate;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.turkcell.rentacar.entities.abstracts.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,24 +21,28 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "ordered_additional_products")
-public class OrderedAdditionalProduct {
+@Table(name = "credit_cards")
+public class CreditCard {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ordered_additional_product_id")
-	private int orderedAdditionalProductId;
+	@Column(name = "credit_card_id")
+	private int creditCardId;
 
-	@Column(name = "ordered_additional_product_amount")
-	private int orderedAdditionalProductAmount;
+	@Column(name = "credit_card_no")
+	private String creditCardNo;
 
-	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "rent_id")
-	private Rent rent;
+	@Column(name = "card_holder")
+	private String cardHolder;
 
-	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "additional_product_id")
-	private AdditionalProduct additionalProduct;
+	@Column(name = "expiration_date")
+	private LocalDate expirationDate;
 
+	@Column(name = "cvv")
+	private String cvv;
+
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
 
 }

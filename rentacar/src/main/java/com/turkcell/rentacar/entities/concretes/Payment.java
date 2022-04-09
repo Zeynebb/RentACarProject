@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.turkcell.rentacar.entities.abstracts.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -47,9 +49,10 @@ public class Payment {
 	private Rent rent;
 
 	@OneToMany(mappedBy = "payment")
-	private List<OrderedAdditionalProduct> orderedAdditionalProducts;
-
-	@OneToMany(mappedBy = "payment")
 	private List<Invoice> invoices;
+
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
 
 }

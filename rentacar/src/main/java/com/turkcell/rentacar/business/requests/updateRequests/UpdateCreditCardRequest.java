@@ -1,4 +1,6 @@
-package com.turkcell.rentacar.business.requests.createRequests;
+package com.turkcell.rentacar.business.requests.updateRequests;
+
+import java.time.LocalDate;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -11,30 +13,29 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateCarRequest {
+public class UpdateCreditCardRequest {
 
 	@NotNull
-	@Min(0)
-	private double dailyPrice;
+	@Min(1)
+	private int creditCardId;
 
 	@NotNull
 	@Size(min = 2)
-	private String modelYear;
+	private String creditCardNo;
 
 	@NotNull
-	@Size(min = 2, max = 50)
-	private String description;
+	@Size(min = 2)
+	private String cardHolder;
 
 	@NotNull
-	@Size(min = 2, max = 50)
-	private String kilometerInfo;
+	private LocalDate expirationDate;
 
+	@NotNull
+	@Size(min = 3)
+	private String cvv;
+	
 	@NotNull
 	@Min(1)
-	private int brandId;
-
-	@NotNull
-	@Min(1)
-	private int colorId;
+	private int userId;
 
 }

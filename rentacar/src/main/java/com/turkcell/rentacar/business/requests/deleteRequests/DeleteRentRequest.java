@@ -14,6 +14,6 @@ public class DeleteRentRequest {
 
 	@NotNull
 	@Min(1)
-	private int rentId;
+	private String rentId;
 	
 }

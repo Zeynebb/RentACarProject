@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RentGetDto {
 
+	private int rentId;
+
 	private LocalDate rentDate;
 
 	private LocalDate rentReturnDate;
@@ -32,13 +34,5 @@ public class RentGetDto {
 	private String rentalCity;
 
 	private String returnCity;
-
-	private int orderedAdditionalProductId;
-
-	private int orderedAdditionalProductAmount;
-
-	private int additionalProductId;
-
-	private double additionalProductUnitPrice;
 
 }

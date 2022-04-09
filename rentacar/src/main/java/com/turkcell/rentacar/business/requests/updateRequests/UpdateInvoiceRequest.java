@@ -18,7 +18,7 @@ public class UpdateInvoiceRequest {
 
 	@NotNull
 	@Min(1)
-	private int rentId;
+	private String rentId;
 
 	@NotNull
 	@Min(1)

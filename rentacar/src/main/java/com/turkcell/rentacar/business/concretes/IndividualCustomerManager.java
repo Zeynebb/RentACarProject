@@ -1,6 +1,7 @@
 package com.turkcell.rentacar.business.concretes;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentacar.business.abstracts.IndividualCustomerService;
@@ -8,6 +9,7 @@ import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.requests.createRequests.CreateIndividualCustomerRequest;
 import com.turkcell.rentacar.business.requests.deleteRequests.DeleteIndividualCustomerRequest;
 import com.turkcell.rentacar.business.requests.updateRequests.UpdateIndividualCustomerRequest;
+import com.turkcell.rentacar.core.services.abstracts.BaseNationalIdentityService;
 import com.turkcell.rentacar.core.utilities.mapping.ModelMapperService;
 import com.turkcell.rentacar.core.utilities.results.Result;
 import com.turkcell.rentacar.core.utilities.results.SuccessResult;
@@ -16,21 +18,20 @@ import com.turkcell.rentacar.entities.concretes.IndividualCustomer;
 import com.turkcell.rentacar.exceptions.businessExceptions.EntityAlreadyExistsException;
 import com.turkcell.rentacar.exceptions.businessExceptions.EntityNotFoundException;
 import com.turkcell.rentacar.exceptions.businessExceptions.NationalIdentityNotValidException;
-import com.turkcell.rentacar.nationalIdentityService.NationalIdentityService;
 
 @Service
 public class IndividualCustomerManager implements IndividualCustomerService {
 
 	private IndividualCustomerDao individualCustomerDao;
 	private ModelMapperService modelMapperService;
-	private NationalIdentityService nationalIdentityService;
+	private BaseNationalIdentityService baseNationalIdentityService;
 
 	@Autowired
 	public IndividualCustomerManager(IndividualCustomerDao individualCustomerDao, ModelMapperService modelMapperService,
-			NationalIdentityService nationalIdentityService) {
+			@Qualifier("fakeNationalIdentityManager") BaseNationalIdentityService baseNationalIdentityService) {
 		this.individualCustomerDao = individualCustomerDao;
 		this.modelMapperService = modelMapperService;
-		this.nationalIdentityService = nationalIdentityService;
+		this.baseNationalIdentityService = baseNationalIdentityService;
 	}
 
 	@Override
@@ -88,7 +89,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	}
 
 	private void checkIfNationalIdentityIsReal(String nationalIdentity) {
-		if (!this.nationalIdentityService.checkNationalIdentity(nationalIdentity)) {
+		if (!this.baseNationalIdentityService.checkNationalIdentity(nationalIdentity)) {
 			throw new NationalIdentityNotValidException(BusinessMessages.NATIONAL_IDENTITY_NOT_VALID);
 		}
 	}

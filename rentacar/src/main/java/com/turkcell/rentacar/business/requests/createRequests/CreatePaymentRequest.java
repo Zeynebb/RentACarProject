@@ -32,9 +32,13 @@ public class CreatePaymentRequest {
 	@NotNull
 	@Size(min = 3)
 	private String cvv;
-
+	
 	@NotNull
 	@Min(1)
-	private int rentId;
+	private int userId;
+	
+	@NotNull
+	@Min(1)
+	private String rentId;
 
 }

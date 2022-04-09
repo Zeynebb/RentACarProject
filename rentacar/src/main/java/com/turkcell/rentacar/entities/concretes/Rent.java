@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -27,15 +25,17 @@ import lombok.NoArgsConstructor;
 public class Rent {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "rent_id")
-	private int rentId;
+	private String rentId;
 
 	@Column(name = "rent_date")
 	private LocalDate rentDate;
 
 	@Column(name = "rent_return_date")
 	private LocalDate rentReturnDate;
+
+	@Column(name = "delivery_date")
+	private LocalDate deliveryDate;
 
 	@Column(name = "rent_status")
 	private boolean rentStatus = true;
@@ -67,7 +67,7 @@ public class Rent {
 
 	@OneToMany(mappedBy = "rent")
 	private List<Invoice> invoices;
-	
+
 	@OneToMany(mappedBy = "rent")
 	private List<Payment> payments;
 

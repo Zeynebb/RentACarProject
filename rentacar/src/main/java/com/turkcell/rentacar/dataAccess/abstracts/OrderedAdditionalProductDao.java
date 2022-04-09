@@ -8,8 +8,8 @@ import com.turkcell.rentacar.entities.concretes.OrderedAdditionalProduct;
 
 public interface OrderedAdditionalProductDao extends JpaRepository<OrderedAdditionalProduct, Integer> {
 
-	List<OrderedAdditionalProduct> getByRent_RentId(int rentId);
+	List<OrderedAdditionalProduct> getByRent_RentId(String rentId);
 	
-	boolean existsByRent_RentId(int rentId);
+	boolean existsByRent_RentId(String rentId);
 
 }
